@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Descargar Ordenes de Trabajo</title>
+
+	
+	<style type="text/css">
+		.my-page .ui-listview li .ui-btn .ui-li-aside {
+		    color: #a5a5a5 !important;
+		}
+		.my-page .ui-listview li .ui-btn p {
+		    color: #555555 !important;
+		}
+		.label,.glyphicon { margin-right:5px; }
+		.azul{
+			color: #4db1ea;
+		}
+		
+		/* Start by setting display:none to make this hidden.
+		   Then we position it in relation to the viewport window
+		   with position:fixed. Width, height, top and left speak
+		   speak for themselves. Background we set to 80% white with
+		   our animation centered, and no-repeating */
+		.cargando {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 )
+    			url('img/loading.gif') 
+                50% 50%  
+                no-repeat;
+                /*url('../img/loading.gif')*/
+		}
+		
+		/* When the body has the loading class, we turn
+		   the scrollbar off with overflow:hidden */
+		body.loading {
+		    overflow: hidden;   
+		}
+		
+		/* Anytime the body has the loading class, our
+		   modal element will be visible */
+		.cargando {
+		    display: block;
+		}
+
+		
+	</style>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+   
+    <script src="js/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+	
+	<script src="js/valida.js"></script> 
+ 	<script type="text/javascript" src="cordova.js"></script> 
+	<script type="text/javascript" src="js/index.js"></script> 
+
+</head>
+<body >
+
+<div class="container" >
+    <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span
+                    class="icon-bar"></span><span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" >GeoData</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="principal.html" target="_top"><span class="glyphicon glyphicon-list-alt"></span>Diligenciar<span class="label label-info" id="num_forms">0</span></a></li>
+                <li><a href="mapa_query/mobile-jq-query.html" target="_top"><span class="glyphicon glyphicon-map-marker"></span>Mapa</a></li>
+                <li><a href="listado.html" target="_top"><span class="glyphicon glyphicon-th-list"></span>Mi información</a></li>
+                <li class="dropdown active"><a href="sincronizar.html" target="_top" class="dropdown-toggle" data-toggle="dropdown"><span
+                    class="glyphicon glyphicon-retweet"></span>Servidor <b class="caret"></b></a>
+                    <ul class="dropdown-menu" style="min-width: 300px;">
+                        <li><a href="cargar.html" target="_top"><span class="glyphicon glyphicon-export"></span>Enviar</a></li>
+                        <li class="divider"></li>
+                        <li class="active"><a href="#" target="_top"><span class="glyphicon glyphicon-import"></span>Descargar</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown"><a id="cerrar_sesion" class="dropdown-toggle" data-toggle="dropdown"><span
+                    class="glyphicon glyphicon-user"></span>Cerrar sesi&oacute;n </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="loading"></div>
+    
+		<h2>Descargar Formularios</h2>
+		<p id="txt_pregunta">Seguro que deseas descargar la Información?, recuerda que perderas el trabajo realizado desde la ultima descarga.</p>
+		<p>
+			
+	      	<button type="button" id="btn_si" class="btn btn-primary"><span class="glyphicon glyphicon-download"></span>Descargar</button>&nbsp;&nbsp;&nbsp;&nbsp;
+	        <button type="button" id="btn_no" class="btn btn-default">Volver</button>
+			
+	<!--	    <a href="#" target="_top" id="btn_si" data-theme="b" data-role="button" data-inline="true">SI</a>
+		    <a href="#" target="_top" id="btn_no" data-theme="a" data-role="button" data-inline="true">No</a> -->
+		</p>
+				<div data-role="content" style="display: none"><br><h2>Descargar Cartografía</h2><br>
+					Seguro que deseas descargar la Cartografía?, el proceso puede durar algunos minutos
+					<p>
+					    <a href="#" target="_top" id="btn_si_carto" data-theme="b" data-role="button" data-inline="true">SI</a>
+					    <a href="#" target="_top" id="btn_no_carto" data-theme="a" data-role="button" data-inline="true">No</a>
+					</p>
+			    </div><!-- /content -->
+</div>
+
+	<!-- End Page Content  -->
+	<script src="js/confirmacion.js"></script>
+	<script src="js/bdactualizar_parametros.js"></script>
+	<script src="js/actualizar_parametros.js"></script>
+	<script src="js/geolocation.js"></script>
+	<script src="js/cerrar_sesion.js"></script>
+	
+</body>
+</html>

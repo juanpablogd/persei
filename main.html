@@ -1,0 +1,81 @@
+<html lang="es"><head>
+    <meta charset="utf-8">
+    <title>login form layered  - Bootsnipp.com</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<style>
+		#btn-login{
+			width: 94%;
+		}
+		.modal-header {
+		    padding: 0px;
+		}
+		.panel-info>.panel-heading {
+		    background-color: 426baa;
+		}
+		h3, .h3 {
+		    margin-top: -10px;
+		}
+	</style>
+   
+    <script src="js/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    
+	<script type="text/javascript" src="js/conexion_servidor.js"></script>
+
+</head>
+<body>
+		<div class="modal-dialog">
+				<div class="modal-header">
+					<div align="center"><img src="img/logo.png" width="70%"  align="center"></div>
+					<h3><div id ="equivocado" align="center" class="notificacion" style="color:grey"></div></h3>
+				</div>
+		        <div id="loginbox" style="margin-top:10px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
+		            <div class="panel panel-info" >
+		                    <div class="panel-heading">
+		                        <div class="panel-title" align="center">
+		                        	<img src="img/logo_empresa.png" width="70%"  align="center">
+		                    	</div>
+		                    </div>     
+		
+		                    <div class="modal-body">
+		
+		                        <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+		                            
+		                        <form id="loginform" class="form-horizontal" role="form">
+		                                    
+		                            <div style="margin-bottom: 25px" class="input-group">
+		                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+		                                        <input id="login" type="text" class="form-control" name="login" value="" placeholder="Usuario">                                        
+		                                    </div>
+		                                
+		                            <div style="margin-bottom: 25px" class="input-group">
+		                                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+		                                        <input id="password" type="password" class="form-control" name="password" placeholder="Clave">
+		                                    </div>
+		
+		                                <div style="margin-top:10px" class="form-group">
+		                                    <!-- Button -->
+		
+		                                    <div class="col-sm-12 controls" align="center">
+		                                      <button id="btn-login" class="btn btn-md btn-primary">Ingresar</button>
+
+		                                    </div>
+		                                </div>
+		
+		
+		                                <div class="form-group">
+		                                    <div class="col-md-12 control">
+		                                        <!--div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
+		                                            GIS -  2018<br>visitanos ® <a href="http://www.Systems.com/">www.Systems.com</a>
+		                                        </div-->
+		                                    </div>
+		                                </div>    
+		                            </form>     
+		                        </div>                     
+		                </div>  
+		        </div>
+		</div>
+	<script type="text/javascript" src="js/bdLocal.js"></script>
+	<script type="text/javascript" src="js/logueo.js"></script>
+</body></html>

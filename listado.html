@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Formularios - GeoData</title>
+
+	
+	<style type="text/css">
+		.my-page .ui-listview li .ui-btn .ui-li-aside {
+		    color: #a5a5a5 !important;
+		}
+		.my-page .ui-listview li .ui-btn p {
+		    color: #555555 !important;
+		}
+		.label,.glyphicon { margin-right:5px; }
+		.azul{
+			color: #4db1ea;
+		}
+		
+		.modal-header {
+			padding: 10px !important;
+		}
+		
+		.modal-body {
+			padding: 10px !important;
+		}
+	
+		.modal-dialog {
+			margin: 1px auto !important;
+		}
+		
+		.modal-footer {
+			margin-top: 2px !important;
+			padding: 10px 10px 10px !important;
+			font-size: xx-small !important;
+		}
+		
+		h4, .h4 {
+			margin-top: 5px !important;
+			margin-bottom: 5px !important;
+		}
+		
+		h6, .h6 {
+			margin-top: 1px !important;
+			margin-bottom:1px !important;
+		}
+		
+	</style>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="css/font-awesome.min.css" rel="stylesheet" id="bootstrap--icons-css">
+   
+    <script src="js/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+	
+	<script src="js/valida.js"></script> 
+ 	<script type="text/javascript" src="cordova.js"></script> 
+	<script type="text/javascript" src="js/index_principal.js"></script> 
+
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span>
+                <span class="icon-bar"></span><span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" >GeoData</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="principal.html"><span class="glyphicon glyphicon-list-alt"></span>Diligenciar&nbsp;<span class="label label-info" id="num_forms"></span></a></li>
+                <li><a href="mapa_query/mobile-jq-query.html" target="_top"><span class="glyphicon glyphicon-map-marker"></span>Mapa</a></li>
+                <li><a href="listado.html" target="_top"><span class="glyphicon glyphicon-th-list"></span>Mi información</a></li>
+                <li class="dropdown"><a href="cargar.html" target="_top" class="dropdown-toggle" data-toggle="dropdown">
+                	<span class="glyphicon glyphicon-retweet"></span>Servidor <b class="caret"></b></a>
+                    <ul class="dropdown-menu" style="min-width: 300px;">
+                        <li><a href="cargar.html" target="_top"><span class="glyphicon glyphicon-export"></span>Enviar</a></li>
+                        <li class="divider"></li>
+                        <li><a href="descargar.html" target="_top"><span class="glyphicon glyphicon-import"></span>Descargar</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown"><a id="cerrar_sesion" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span>Cerrar sesi&oacute;n </a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+</div>
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h5>Información Guardada</h5>
+		</div>
+		<div class="modal-body">
+			<div class="list-group" id="items">
+			</div>
+				<a href="#" id="notificacion" class="list-group-item "><span class="glyphicon glyphicon-warning-sign"></span>&nbsp;<label style="color: red">No se ha ingresado información!</label>&nbsp;<span class="glyphicon glyphicon-warning-sign"></span></a>
+		</div>   
+		<div class="modal-footer">
+			<h6 id="estado_envio">&nbsp;</h6>
+			<div class="row"> 
+		        <div class="col-md-6">
+		            <label><h6 id="estado_info" style="color:red">&nbsp;</h6></label>
+		        </div>
+		        <div class="col-md-6" id="version"></div>
+		    </div>
+		
+		</div>
+	</div> 
+</div>
+	<!-- End Page Content -->
+
+<script src="js/confirmacion.js"></script>
+<!-- script src="js/sincronizar_automaticamente.js"></script --> 
+<script src="js/listado.js"></script>
+<!-- script src="js/geolocation.js"></script -->
+<script src="js/cerrar_sesion.js"></script>
+	
+</body>
+</html>

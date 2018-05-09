@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Formulario</title>
+	<link type="text/css" href="css/formulario.css" rel="stylesheet" /> 
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">	<!-- Tema / Bootstrap -->
+    
+    <link href="datepicker/css/datepicker.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/animate.css">								<!-- Animaciones / Notificaciones -->
+    
+	<style type="text/css">
+		.rojo{
+			color: #d6252b;
+		}
+		.verde{
+			color: #6ea037;
+		}
+		.blanco{
+			color: white;
+		}
+		
+		.responsive-video {
+		position: relative;
+		padding-bottom: 56.25%;
+		padding-top: 60px; overflow: hidden;
+		}
+
+		.responsive-video iframe,
+		.responsive-video object,
+		.responsive-video embed {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		}
+		.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+		    color: #FFFFFF !important;
+		}
+	</style>
+    
+<!-- Cordova / Phonegap -->	
+	<script src="js/jquery.min.js"></script> 
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap-growl-master/bootstrap-notify.min.js"></script>		<!-- Mensajes / Notificaciones -->
+    
+    <script src="datepicker/js/bootstrap-datepicker.js"></script>				<!-- CALENDARIO -->
+    <script src="datepicker/js/locales/bootstrap-datepicker.es.js"></script>	<!-- CALENDARIO -->
+    <script src="bootbox-master/bootbox.js"></script>							<!-- NOTIFICACIONES -->
+    <script src="js/libs/numeral.min.js"></script>							<!-- NUMERAL -->
+    <script src="js/libs/turf.min.js"></script>							<!-- TURFJS -->
+
+<!-- Cordova / Phonegap -->
+	<script type="text/javascript" src="cordova.js"></script>
+	<script type="text/javascript" src="js/index_formulario.js"></script>
+ 
+	
+</head>
+<body>
+
+	
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container-fluid">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header ">
+            <ul class="nav nav-tabs">
+            	<li><a href="#" id="salir" target="_top" class="btn btn-danger "><span class="glyphicon glyphicon-remove"></span></a></li>
+                <li class="active" id="tabPreguntas"><a href="#tab1_form" data-toggle="tab" class="btn btn-primary"><span class="glyphicon glyphicon-list-alt"></span></a></li>
+                <li id="tabFotos"><a href="#tab2_foto" data-toggle="tab"class="btn btn-primary"><span class="glyphicon glyphicon-camera"></span></a></li>
+                <li id="tabVideos"><a href="#tab3_video" data-toggle="tab" class="btn btn-primary"><span class="glyphicon glyphicon-facetime-video"></span></a></li>
+                <li><a href="#tab4_geom" class="btn btn-danger" data-toggle="tab" id="id_tab4_geom"><span class="glyphicon glyphicon-map-marker blanco"></span></a></li>
+				<li><a href="#" target="_top" class="btn btn-success" id="guardar"><span class="glyphicon glyphicon-ok"></span></a></li>	
+            </ul>
+	    </div>
+	</div>
+</nav>
+	
+    
+<div class="container">
+    <div class="tab-content">
+	<!-- TITULO - Brand and toggle get grouped for better mobile display -->
+		<div class="row"><br><br><p class="navbar-text" id="titulo" align="center"><span class="label label-info" id="num_preguntas">0</span></p></div>
+        <div class="tab-pane fade in active" id="tab1_form">
+					<!-- FORMULARIO INICIO-->
+					<div id="items"></div><br><!-- /FORMULARIO FIN-->
+		</div>
+        <div class="tab-pane fade" id="tab2_foto">
+					<!-- CAMARA-->
+					    <div class="api-div" id="api-camera">
+							<!-- -<a data-role="button" data-icon="arrow-r" data-iconpos="right" class="btn deux" onclick="take_pic();">Capturar Fotograf&iacute;a</a>	-->
+							<div class="result-block"> </div>
+							<button type="button" class="btn btn-success" id="add_foto"><span class="glyphicon glyphicon-plus"></span>&nbsp;Capturar Foto&nbsp;<span class="glyphicon glyphicon-camera"></span></button>
+							<button type="button" class="btn btn-success" id="add_fotoLibreria"><span class="glyphicon glyphicon-plus"></span>&nbsp;Librería&nbsp;<span class="glyphicon glyphicon-picture"></span></button>
+							<p id="lista_fotos"></p>
+			
+						</div>
+					<!-- CAMARA FIN-->
+		</div>
+		<div class="tab-pane fade" id="tab3_video">
+					<!--  VIDEO INICIO-->
+					    <div class="api-div" id="api-video">
+							<!-- -<a data-role="button" data-icon="arrow-r" data-iconpos="right" class="btn deux" onclick="take_pic();">Capturar Fotograf&iacute;a</a>	-->
+							<div class="result-block"> </div>
+							<button type="button" class="btn btn-success" id="add_video"><span class="glyphicon glyphicon-plus"></span>&nbsp;Capturar Video&nbsp;<span class="glyphicon glyphicon-facetime-video"></span></button>
+							<p id="lista_videos"></p>
+			
+						</div>
+					<!-- VIDEO FIN-->
+		</div>
+		<div class="tab-pane fade" id="tab4_geom">
+                	<!--  GEOMETRIA INICIO-->
+                		<div class="row"><p id="Subtitulo" align="center">&nbsp;</p></div>
+						<label for="id_geometria" class="select" id="Lid_geometria">Ingresar Geometría</label>
+						<select class="form-control" name="id_geometria" id="id_geometria" >
+							<option value="">Ninguna</option>
+						</select>
+						
+						<div class="result-block"> <span id="cur_position">&nsub;</span></div><br>
+						<div class="result-block"> <span id="search_cur_position">&nbsp;</span></div><br>
+					<!--  GEOMETRIA FIN-->
+		</div>
+                
+        </div>
+</div>
+<div class="panel-footer">
+	<nav class="navbar navbar-default" role="navigation">
+		<a href="#" id="salir_abajo" target="_top" class="btn btn-danger navbar-btn"><span class="glyphicon glyphicon-remove-circle"></span></a>
+		<span align="center" class="label" style="color: gray;">GeoData</span>
+	    <a href="#" target="_top" class="btn btn-success navbar-btn pull-right" id="guardar_abajo"><span class="glyphicon glyphicon-ok"></span>Guardar</a>
+	</nav>
+</div>
+	<script src="js/confirmacion.js"></script>
+	<script src="js/camera.js"></script>
+	<script src="js/video.js"></script>		
+	<script src="js/geolocalizar_ini.js"></script>
+	<script src="js/geoProcesos.js"></script>
+	<script src="js/dominios.js"></script>
+	<script src="js/cargar_items.js"></script>
+</body>
+</html>
