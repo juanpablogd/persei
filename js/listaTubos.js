@@ -12,10 +12,10 @@ var arDiametros = {};
 //CONTROL DE ERRORES
 function errorCB(err) {
 	if (err.code == undefined && err.message == undefined){
-		alerta("GeoData","Descargue formularios pendientes!","Ok","descargar.html");
+		alerta("Persei","Descargue formularios pendientes!","Ok","descargar.html");
 	}else
 	{
-		alerta("GeoData","Error procesando SQL: Codigo: " + err.code + " Mensaje: "+err.message,"Ok","principal.html");
+		alerta("Persei","Error procesando SQL: Codigo: " + err.code + " Mensaje: "+err.message,"Ok","principal.html");
 	}
 }
 
@@ -30,7 +30,7 @@ function ConsultaItems(tx) {
 function ConsultaItemsCarga(tx, results) {
 	var len = results.rows.length;	//console.log(len);
 	if(len == 0){
-		alerta("GeoData","Debe descargar la configuracíon del servidor","Ok","descargar.html");
+		alerta("Persei","Debe descargar la configuracíon del servidor","Ok","descargar.html");
 	}else{
 		for (j = 0; j < len; j++){
 			var sql = 'select distinct respuesta as idsig_pozo,fecha_asignacion,"'+results.rows.item(j).esquema+'" as esquema,id_categoria from '+results.rows.item(j).esquema+'t_asignacion_lugar a'+

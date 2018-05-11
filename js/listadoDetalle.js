@@ -9,10 +9,10 @@ var esquema;
 //CONTROL DE ERRORES
 function errorCB(err) {
 	if (err.code == undefined && err.message == undefined){
-		alerta("GeoData","Descargue formularios pendientes!","Ok","descargar.html");
+		alerta("Persei","Descargue formularios pendientes!","Ok","descargar.html");
 	}else
 	{
-		alerta("GeoData","Error procesando SQL: Codigo: " + err.code + " Mensaje: "+err.message,"Ok","principal.html");
+		alerta("Persei","Error procesando SQL: Codigo: " + err.code + " Mensaje: "+err.message,"Ok","principal.html");
 	}
 }
 
@@ -45,7 +45,7 @@ $(document).ready(function(){
         bootbox.hideAll();
 		bootbox.dialog({
 		  message: " ¿Está seguro que ELIMINAR este registro?",
-		  title: "<span class=\"glyphicon glyphicon-warning-sign rojo \"></span> GeoData - ELiminar",
+		  title: "<span class=\"glyphicon glyphicon-warning-sign rojo \"></span> Persei - ELiminar",
 		  buttons: {
 		    success: {
 		      label: "Si",

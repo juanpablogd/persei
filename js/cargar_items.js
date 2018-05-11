@@ -172,7 +172,7 @@ function cargaExistente(tx){	console.log("cargaExistente");
 				      	if(contar_fotos() > 0){
 					      	setTimeout(function () {
 					      		activaTab('tab1_form');
-					      	}, 0.4*1000)				      		
+					      	}, 0.4*1000);
 				      	}
 				      }
 				   }, 0.04*1000)
@@ -473,7 +473,7 @@ function ConsultaItemsCarga(tx, results) {
 		
 		var rta = results.rows.item(i).tipo_rta;
 		var id_item = results.rows.item(i).id_item;
-		var descripcion_item = convertHTMLEntity(results.rows.item(i).descripcion_item); descripcion_item = descripcion_item.replace(/&lt;/g, "<"); descripcion_item = descripcion_item.replace(/&gt;/g, ">").toUpperCase().trim();
+		var descripcion_item = convertHTMLEntity(results.rows.item(i).descripcion_item); descripcion_item = descripcion_item.replace(/&lt;/g, "<"); descripcion_item = descripcion_item.replace(/&gt;/g, ">").toUpperCase().trim(); console.log(descripcion_item);
 		var obligatorio = ""; //console.log(results.rows.item(i).obligatorio.trim());
 		if(results.rows.item(i).obligatorio.trim() == "S") {obligatorio = "required";}
 
@@ -518,15 +518,17 @@ function ConsultaItemsCarga(tx, results) {
 				if(localStorage.li =="nuevo"){
 					$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="control-label">'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'"></label></label><input type="text" class="form-control" name="'+id_item+'" id="'+id_item+'" placeholder="'+descripcion_item+'" value=""  maxlength="255" '+obligatorio+' visible="true"/></div>');
 				}
-			}
-			else
+			}else if (descripcion_item == "NUMERO MEDIDOR"){
+				var valorI =localStorage.lc_med;
+				$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="control-label">'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'"></label></label><input type="text" class="form-control" name="'+id_item+'" id="'+id_item+'" placeholder="'+descripcion_item+'" value="'+valorI+'" maxlength="255" '+obligatorio+' visible="true" readonly/></div>');
+			}else
 			{
 				$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="control-label">'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'"></label></label><input type="text" class="form-control" name="'+id_item+'" id="'+id_item+'" placeholder="'+descripcion_item+'" value=""  maxlength="255" '+obligatorio+' visible="true"/></div>');
 			}
 			
 			$("#num_preguntas").html(parseInt(num_actual) + 1);
 		}else if (rta == "PARRAFO" && id_item_last != id_item) {
-			$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="control-label">'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'"></label></label><textarea class="form-control" cols="40" rows="6"  name="'+id_item+'" id="'+id_item+'" value="" '+obligatorio+' visible="true"/></textarea></div>');	/* $('#'+id_item).textinput(); */
+			$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="control-label">'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'"></label></label><textarea class="form-control" cols="40" rows="3"  name="'+id_item+'" id="'+id_item+'" value="" '+obligatorio+' visible="true"/></textarea></div>');	/* $('#'+id_item).textinput(); */
 			$("#num_preguntas").html(parseInt(num_actual) + 1);
 		}else if (rta == "CANTIDAD" && id_item_last != id_item) {
 			$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="control-label">'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'" style="color: white;"></label></label><input type="number" class="form-control" name="'+id_item+'" id="'+id_item+'" placeholder="'+descripcion_item+'" value="" '+obligatorio+' onkeypress="if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 46) event.returnValue = false;" visible="true"/></div>');	/* $('#'+id_item).textinput(); */
@@ -550,7 +552,7 @@ function ConsultaItemsCarga(tx, results) {
 			$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="control-label">'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'"></label></label><input type="text" class="form-control" name="'+id_item+'" id="'+id_item+'" placeholder="'+descripcion_item+'" value="" '+obligatorio+' visible="true" disabled="true"/><button onclick="scanea('+id_item+')" id="btn_scanea'+id_item+'" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-chevron-up"></span> Escanear <span class="glyphicon glyphicon-qrcode"></span></button></div>');	/* $('#'+id_item).textinput(); */
 			$("#num_preguntas").html(parseInt(num_actual) + 1);
 		}else if (rta == "INFO" && id_item_last != id_item) {
-			$("#items").append('<div id="f'+id_item+'" class="form-group "><span name="'+id_item+'" id="'+id_item+'" class="label label-info">'+descripcion_item+'</span></div>');	/* $('#'+id_item).textinput(); */
+			$("#items").append('<div id="f'+id_item+'" class="form-group "><span name="'+id_item+'" id="'+id_item+'" class="label label-info" style="font-size: 100%;display: block;">'+descripcion_item+'</span></div>');	/* $('#'+id_item).textinput(); */
 		}
 		if((i+1)==len){		//DESPUES DE CARGAR TODOS LOS REGISTROS
 			// OCULTAR ITEMS
@@ -567,9 +569,22 @@ function ConsultaItemsCarga(tx, results) {
 	
 	id_item_last = id_item;
    	}
- 	
-	/* JQUERY FINAL DE INSTRUCCIÓN*/
-	
+	/*	TERMINAR DE CARGAR LOS INPUTS */
+	if (localStorage.nombre_form.toLowerCase().indexOf("consumo") >= 0){
+		//LECTURA
+    	$("#lr4").text(parseFloat(localStorage.lc_min)+(localStorage.lc_max-localStorage.lc_min)/2);	//Profundidad IDITEM = 94 para POZO
+		//Pone valores x Defecto
+		console.log("Trigger 1");
+		$("#5").val("Si@13").trigger("change");			
+		$("#1").html("Dirección: "+localStorage.lc_dir);
+      	setTimeout(function () {	console.log("Trigger 2");
+      		$("#6").val("NO@16").trigger("change");		
+	      	setTimeout(function () {	console.log("POne FOco");
+	      		$("#4").focus();
+	      	}, 70);
+      	}, 70);
+	}
+
     /* ADICIONA OPCIONES PARA LA FECHA */
     $("input[tipo='fecha']").datepicker({
 		    format: "yyyy/mm/dd",
@@ -601,11 +616,23 @@ function ConsultaItemsCarga(tx, results) {
 			if(valDefecto!=''){
 				var digitado = inVal.split("@");
 				if(vaTipo=="number"){ //console.log(numeral(inVal).value());
-					var min = numeral(valDefecto).value() * (porceVarianza/100);		//console.log(min);
-					var max = numeral(valDefecto).value() * (1+(porceVarianza/100));	//console.log(max);
+					var min = 0;
+					var max = 999;
+			        if (localStorage.nombre_form.toLowerCase().indexOf("consumo") >= 0){
+						min = localStorage.lc_min;		//console.log(min);
+						max = localStorage.lc_max;
+			        }else{
+						min = numeral(valDefecto).value() * (porceVarianza/100);		//console.log(min);
+						max = numeral(valDefecto).value() * (1+(porceVarianza/100));	//console.log(max);
+			        }
+
 					var dig = numeral(digitado[0]).value();
 					if(dig < min || dig > max){	
-						msj_peligro(inLabel+"</br>El valor '"+digitado[0]+"' NO se encuentra en el rango esperado: 	"+ (Math.round(min * 1000) / 1000) + " - " + (Math.round(max * 1000) / 1000),10)
+				        if (localStorage.nombre_form.toLowerCase().indexOf("consumo") >= 0){
+				        	msj_peligro(inLabel+"</br>El valor '"+digitado[0]+"' NO se encuentra en el rango esperado: 	"+ (Math.round(min * 1000) / 1000) + " - " + (Math.round(max * 1000) / 1000),10)
+				        }else{
+				        	msj_peligro(inLabel+"</br>El valor '"+digitado[0]+"' NO se encuentra en el rango esperado: 	"+ (Math.round(min * 1000) / 1000) + " - " + (Math.round(max * 1000) / 1000),10);
+				        }
 					}
 				}else if (vaTipo =="select"){
 /*					var txtSelect = $("#"+inID+" option:selected").text();
@@ -655,7 +682,6 @@ function OcultartemsResult(tx, results) {
 		$("#f"+id_item+"").removeClass("required");
 		$("#"+id_item+"").hide();
    	}
-
 }
 /***FIN OCULTAR ITEMS*************************************************************************************************************************************************************/
 
@@ -809,9 +835,16 @@ function GuardarItemsExe(tx) {
 	localStorage.geometria="";
 	console.log("Almacenamiento Exitoso");
 	if(asignado=="t"){	//si es asignado
-		alerta("GeoData - Guardar","Información Guardada exitosamente","Ok","mapa/mobile-jq.html");
+		alerta("Persei - Guardar","Información Guardada exitosamente","Ok","mapa/mobile-jq.html");
 	}else{
-		alerta("GeoData - Guardar","Información Guardada exitosamente","Ok","principal.html");
+        if (localStorage.nombre_form.toLowerCase().indexOf("tubo") >= 0){
+            alerta("Persei - Guardar","Información Guardada exitosamente","Ok","listaTubos.html");
+        }else if (localStorage.nombre_form.toLowerCase().indexOf("consumo") >= 0){
+        	localStorage.siguiente = "SI";
+            alerta("Persei - Guardar","Información Guardada exitosamente","Ok","listaLectura.html");
+        }else{
+            alerta("Persei - Guardar","Información Guardada exitosamente","Ok","principal.html");
+        }
 	}
 
 }

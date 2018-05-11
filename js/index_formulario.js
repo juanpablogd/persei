@@ -40,7 +40,7 @@ var app = {
         bootbox.hideAll();
 		bootbox.dialog({
 		  message: " ¿Está seguro que desea salir sin guardar cambios?",
-		  title: "<span class=\"glyphicon glyphicon-warning-sign rojo \"></span> GeoData - Guardar",
+		  title: "<span class=\"glyphicon glyphicon-warning-sign rojo \"></span> Persei - Guardar",
 		  buttons: {
 		    success: {
 		      label: "Si",
@@ -49,12 +49,16 @@ var app = {
 					if(asignado=="t"){	//si es asignado
 						window.location = "mapa/mobile-jq.html";
 					}else{
-                        if (localStorage.nombre_form.toLowerCase().indexOf("tubo") >= 0){
-                            window.location = "listaTubos.html";
-                        }else{
-                            window.location = "principal.html";
-                        }
-						
+                        localStorage.siguiente = "";
+                        setTimeout(function(){ 
+                            if (localStorage.nombre_form.toLowerCase().indexOf("tubo") >= 0){
+                                window.location = "listaTubos.html";
+                            }else if (localStorage.nombre_form.toLowerCase().indexOf("consumo") >= 0){
+                                window.location = "listaLectura.html";
+                            }else{
+                                window.location = "principal.html";
+                            }
+                        }, 90);
 					}
 		      }
 		    },

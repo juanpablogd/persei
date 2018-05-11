@@ -86,7 +86,7 @@ function TablaGuardarExe(tx) {
 	}
 	
 	$("#loading").removeClass("cargando");
-	alerta("GeoData","Actualización exitosa","Ok","principal.html");
+	alerta("Persei","Actualización exitosa","Ok","principal.html");
 	
 }
 
@@ -109,7 +109,7 @@ function TablaGuardarExe_cartografia(tx) {
 	}
 	
 	$("#loading").removeClass("loading");
-	alerta("GeoData","Actualización exitosa","Ok","principal.html");
+	alerta("Persei","Actualización exitosa","Ok","principal.html");
 	
 /*	alert("Actualización exitosa");
 	window.location = "principal.html";  */
