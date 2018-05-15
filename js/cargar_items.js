@@ -336,8 +336,9 @@ function SeleccionItemsOcultarResult(tx, results) {
 			$("#l"+id_item+"").hide();
 			$("#"+id_item+"").hide();			
 		}
-			
-
+   	}
+   	if(localStorage.tmp_id_rta=="27"){
+   		$("#18").val($("#2").val());
    	}
    
 }
