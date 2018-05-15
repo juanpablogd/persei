@@ -66,7 +66,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 		var estilo="primary";
 		var idUsuario=num_medidor+'|'+min+'|'+max+'|'+direccion;
 		if(id_enviOld!=null){
-			htmlTitulo = ' - ('+id_enviOld+')';
+			htmlTitulo = ' - ('+id_enviOld+')' + '<i id="'+id_enviOld+'|'+num_medidor+'" class="fa fa-close pull-right"></i>';
 			estilo="success";
 			idUsuario="";
 		}else{ //SI ES AUTOMATICO INGRESA DE UNA
@@ -79,20 +79,41 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 				setTimeout(function(){ window.location = "formulario.html"; }, 70);
 			}
 		}
-
 		$("#items").append('<div class="panel panel-'+estilo+'" id="'+idUsuario+'">'+
 			'<div class="panel-heading" style="font-size: 16px;">Medidor: '+num_medidor+htmlTitulo+'</div>'+
 			    '<div class="panel-body" style="font-size: 12px;">'+
 					'<ul class="list-group">'+
 						'Dirección:&nbsp;<label>'+direccion+'</label>&nbsp;'+
-/*						'Cuenta:&nbsp;<label>'+ctacto+'</label>&nbsp;'+
-						'Nombre:&nbsp;<label>'+nombre1+' '+apellido1+'</label>&nbsp;'+
-						'Tel.:&nbsp;<a href="tel:'+indicativo(telefono)+'">'+telefono+'</a>'+ */
 						'Uso:&nbsp;<label>'+uso+'</label>&nbsp;'+
+						'Existe Usuario:&nbsp;<label id="eu_'+num_medidor+'"></label>&nbsp;'+
+						'lectura:&nbsp;<label id="le_'+num_medidor+'"></label>&nbsp;'+
 					'</ul>'+
 			    '</div>'+
 			'</div>'
 		);
+		if(id_enviOld!=null){
+			var sql18 = 'SELECT distinct "'+num_medidor+'" as num_medidor,id_item,respuesta FROM '+
+					' lecturat_rtas_formulario r'+
+					' where (r.id_item = "4" or r.id_item = "5") and r.id_envio = "'+id_enviOld+'"';	console.log(sql18);
+			tx.executeSql(sql18, [], 
+			(function(esquema){
+			   return function(tx,resulta2){
+			   		var lar = resulta2.rows.length;	console.log(lar);
+			   		for (l = 0; l < lar; l++){
+			   			var num_medidor = resulta2.rows.item(l).num_medidor;
+			   			var id_item = resulta2.rows.item(l).id_item;	//console.log(idsig_tubo);
+			   			var respuesta = resulta2.rows.item(l).respuesta;
+
+			   			if(id_item == "4"){	//Si tiene TUBO
+				   			$("#le_"+num_medidor).html(respuesta);
+			   			}else if(id_item == "5"){
+			   				$("#eu_"+num_medidor).html(respuesta);
+			   			}
+			   		}	//console.log("Sale For");
+			   };
+			})(esquema),null);
+		}
+
 		$('div[id*='+num_medidor+']').click(function(e){
 			var mId = $(this).attr('id');	//console.log(mId);
 		    var n=mId.split("|");			//console.log(n[0]);	console.log(n[1]);	console.log(n[2]);
@@ -104,6 +125,36 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 		    setTimeout(function(){ window.location = "formulario.html"; }, 70);
 		});
 
+		$('i[id*='+id_enviOld+']').click(function(e){
+			var mId = $(this).attr('id');	console.log(mId);
+		    var n=mId.split("|");			//console.log(n[0]);	console.log(n[1]);	console.log(n[2]);
+		        bootbox.hideAll();
+				bootbox.dialog({
+				  message: " ¿Está seguro que desea ELIMINAR la lectura del medidor '"+n[1]+"'?",
+				  title: "<span class=\"glyphicon glyphicon-warning-sign rojo \"></span> Persei - Guardar",
+				  buttons: {
+				    success: {
+				      label: "Si",
+				      className: "btn-success",
+				      callback: function() {
+						db.transaction(function (tx) { tx.executeSql('DELETE FROM '+ localStorage.esquema + 't_video where id_envio = "'+n[0]+'"')});
+						db.transaction(function (tx) {tx.executeSql('DELETE FROM '+ localStorage.esquema + 't_fotos where id_envio = "'+n[0]+'"')});
+						db.transaction(function (tx) {tx.executeSql('DELETE FROM '+ localStorage.esquema + 't_rtas_formulario where id_envio = "'+n[0]+'"')});
+						db.transaction(function (tx) {tx.executeSql('DELETE FROM '+ localStorage.esquema + 't_asignacion_lugar where id_envio = "'+n[0]+'"')});
+						setTimeout(function(){ db.transaction(ConsultaItems); }, 800);
+				      }
+				    },
+				    main: {
+				      label: "No",
+				      className: "btn-primary",
+				      callback: function() {
+				        
+				      }
+				    }
+				  }
+				});
+		});
+
 		$("#refNotificacion").hide();	
    	}
 }
@@ -111,5 +162,5 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 $(document).ready(function(){
 	$("#notificacion").hide();
 	// CARGAR Listado de usuarios de lectura
-	db.transaction(ConsultaItems); 
+	db.transaction(ConsultaItems);
 });
