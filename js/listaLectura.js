@@ -41,7 +41,7 @@ function ConsultaItemsCarga(tx, results) {
 			var sql = 'select distinct num_medidor,ctacto,direccion,nombre1,nombre2,apellido1,apellido2,telefono,uso,min,max,r.id_envio '+
 			' from '+results.rows.item(j).esquema+'usuario_estadisticas e '+
 			'	left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "2") '+
-			'order by r.id_envio,order_lectura';
+			'order by r.id_envio,CAST(order_lectura as integer)';
 					console.log(sql);
 			tx.executeSql(sql, [], ConsultaItemsCargaAsignResp,errorCB);
 	   	}
@@ -63,10 +63,12 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 		var uso = resultsV.rows.item(i).uso;
 	
 		var htmlTitulo="";
+		var htmlPrint="";
 		var estilo="primary";
 		var idUsuario=num_medidor+'|'+min+'|'+max+'|'+direccion;
 		if(id_enviOld!=null){
 			htmlTitulo = ' - ('+id_enviOld+')' + '<i id="'+id_enviOld+'|'+num_medidor+'" class="fa fa-close pull-right"></i>';
+			htmlPrint = '<i id="'+id_enviOld+'|'+num_medidor+'" class="fa fa-print pull-right" style="font-size:32px"></i>'
 			estilo="success";
 			idUsuario="";
 		}else{ //SI ES AUTOMATICO INGRESA DE UNA
@@ -87,6 +89,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 						'Uso:&nbsp;<label>'+uso+'</label>&nbsp;'+
 						'Existe Usuario:&nbsp;<label id="eu_'+num_medidor+'"></label>&nbsp;'+
 						'lectura:&nbsp;<label id="le_'+num_medidor+'"></label>&nbsp;'+
+						htmlPrint+
 					'</ul>'+
 			    '</div>'+
 			'</div>'
