@@ -32,7 +32,7 @@ function elimina_foto(num){											console.log(num);
 }
 
 function onFail(message) {
-	$("img").each(function() {
+	$("img[id^='ci']").each(function() {
 		if($(this).attr('src')=="" || $(this).attr('src')==null){
 			$(this).remove();
 		}
@@ -43,7 +43,7 @@ function adicionarFoto(imageData){
 	//VERIFICA SI EXISTEN ELEMENTOS IMG, SI HAY VERIFICA SI HAY DISPONIBILIDAD PARA CAPTURA DE FOTOGRAFÍA
 	var img_disponible = false;
 	//ARRAY DE FOTOS
-	$("img").each(function() {
+	$("img[id^='ci']").each(function() {
 		if($(this).attr('src')=="" || $(this).attr('src')==null){
 			NomIdimage=$(this).attr('id');
 			img_disponible = true;

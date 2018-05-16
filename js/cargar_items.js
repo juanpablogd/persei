@@ -52,7 +52,7 @@ function contar_videos(){
 
 function contar_fotos(){
 	var n = 0;
-	$("img").each(function() {
+	$("img[id^='ci']").each(function() {
 		if($(this).attr('src')!="")  n++;
 	});
 	return n;
@@ -396,6 +396,21 @@ function getval(sel) {
 	db.transaction(SeleccionItemsFiltrar);
 }
 
+function loadFachada(idItem){
+			/* CONSULTA GEOJON */
+		function TBLfachadaConsulta(tx) {	console.log('SELECT b64 FROM '+localStorage.esquema+'p_img_fachada where direccion = "'+localStorage.lc_dir+'"');
+		    tx.executeSql('SELECT b64 FROM '+localStorage.esquema+'p_img_fachada where direccion = "'+localStorage.lc_dir+'"', [], TBLfachadaConsultaConsulta);
+		}
+		/* LOGUEADO EXITOSAMENTE*/
+		function TBLfachadaConsultaConsulta(tx, results) {
+			var len = results.rows.length;	console.log('Resultados: '+len);
+		    if(len>0){
+		    	$("#"+idItem).attr("src",results.rows.item(0).b64);
+			}
+		}
+		db.transaction(TBLfachadaConsulta);
+}
+
  function calculaCercano(id_item){		//console.log(id_item);
  	if(myLatitud != "" && myLongitud != "" && myPrecision != "" ){
 		var x= myLongitud;
@@ -554,6 +569,11 @@ function ConsultaItemsCarga(tx, results) {
 			$("#num_preguntas").html(parseInt(num_actual) + 1);
 		}else if (rta == "INFO" && id_item_last != id_item) {
 			$("#items").append('<div id="f'+id_item+'" class="form-group "><span name="'+id_item+'" id="'+id_item+'" class="label label-info" style="font-size: 100%;display: block;">'+descripcion_item+'</span></div>');	/* $('#'+id_item).textinput(); */
+			if (descripcion_item == "DIRECCION"){
+				console.log("Llama imágen");
+				$("#items").append('<div class="inline thumbnail" align="center"><img style="max-width: 138px;" class="img-responsive" id="imgf'+id_item+'" src="" /></div>');
+				loadFachada('imgf'+id_item);
+			}
 		}
 		if((i+1)==len){		//DESPUES DE CARGAR TODOS LOS REGISTROS
 			// OCULTAR ITEMS
@@ -582,8 +602,8 @@ function ConsultaItemsCarga(tx, results) {
       		$("#6").val("NO@16").trigger("change");		
 	      	setTimeout(function () {	console.log("POne FOco");
 	      		$("#4").focus();
-	      	}, 70);
-      	}, 70);
+	      	}, 90);
+      	}, 260);
 	}
 
     /* ADICIONA OPCIONES PARA LA FECHA */
@@ -596,15 +616,29 @@ function ConsultaItemsCarga(tx, results) {
 		    autoclose: true,
 		    todayHighlight: true
 	});
+	$( "select" ).change(function () {
+		//VALOR DEFECTO
+		var inID = $(this).attr('id');
+		var valDefecto = $("#lr"+inID).text().trim();	//Vr BD de input que pierde el FOCO
+		if(valDefecto!=''){
+			//LABEL DEL ITEM
+			var inLabel = $("#l"+inID).text();	//Label del input que pierde el FOCO
+			//VALOR SELECCIONADO
+			var txtSelect = $("#"+inID+" option:selected").text();
+			if(valDefecto.toUpperCase() != txtSelect.toUpperCase()){	console.log(valDefecto);
+				msj_peligro(inLabel+"</br> Seleccionó un valor diferente: 	"+txtSelect,5)
+			}
+		}
+	});
     //Compara si tiene valor por defecto
-	$(':input').blur(function(){
+	$(':input').blur(function(){	console.log("BLur");
 		var inVal = $(this).val().trim();	//Valor del input que pierde el FOCO
 		var inID = $(this).attr('id');		//ID del input que pierde el FOCO
 		var inLabel = $("#l"+inID).text();	//Label del input que pierde el FOCO
 		var valDefecto = $("#lr"+inID).text().trim();	//Vr BD de input que pierde el FOCO
 		var vaTipo = $(this).attr('type');	//console.log(vaTipo);
 
-		if(inVal != ''){	//console.log($(this).attr('type'));
+		if(inVal != ''){	
 			if(vaTipo=="number"){
 				if(!isNumber(inVal)){
 					$(this).val('');
@@ -646,20 +680,6 @@ function ConsultaItemsCarga(tx, results) {
 					}					
 				}
 
-			}
-		}
-	});
-	$( "select" ).change(function () {
-		//VALOR DEFECTO
-		var inID = $(this).attr('id');
-		var valDefecto = $("#lr"+inID).text().trim();	//Vr BD de input que pierde el FOCO
-		if(valDefecto!=''){
-			//LABEL DEL ITEM
-			var inLabel = $("#l"+inID).text();	//Label del input que pierde el FOCO
-			//VALOR SELECCIONADO
-			var txtSelect = $("#"+inID+" option:selected").text();
-			if(valDefecto.toUpperCase() != txtSelect.toUpperCase()){	console.log(valDefecto);
-				msj_peligro(inLabel+"</br> Seleccionó un valor diferente: 	"+txtSelect,5)
 			}
 		}
 	});
@@ -738,13 +758,13 @@ function comprobarCamposRequired(){
 		if (contar_fotos() < localStorage.foto_obligatorio){
 			correcto=false;
 			msj_peligro("Mínimo de fotos: " + localStorage.foto_obligatorio);
-			activaTab('tab2_foto');
+			//activaTab('tab2_foto');
 		}
 		//GUARDA FOTOS
 		if (contar_fotos() > localStorage.foto_max){
 			correcto=false;
 			msj_peligro("Máximo de fotos: " + localStorage.foto_max);
-			activaTab('tab2_foto');
+			//activaTab('tab2_foto');
 		}
 	}
 	if(correcto==true){	//console.log(contar_videos());	console.log(localStorage.foto_max);
