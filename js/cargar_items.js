@@ -337,9 +337,19 @@ function SeleccionItemsOcultarResult(tx, results) {
 			$("#"+id_item+"").hide();			
 		}
    	}
+   	//si la novedad es cambio de medidor, pone el valor por defecto
    	if(localStorage.tmp_id_rta=="27"){
    		$("#18").val($("#2").val());
    	}
+   	//SI reporta novedad, pone NO en los campos por default
+   	if(localStorage.tmp_id_rta=="15"){ console.log("Si hay novedad");
+   		$("#7").val("No@10");
+   		$("#9").val("No@22");
+   		$("#11").val("No@24");
+   		$("#12").val("No@26");
+   		$("#17").val("No@28");
+   	}
+
    
 }
 function SeleccionItemsFiltrar(tx) {	//console.log('select rs.id as id_add,rs.valor,rs.descripcion,id_item_hijo,vr_padre from '+esquema+'p_items_filtro itf left join '+esquema+'p_rtas_seleccion rs on itf.id_item_hijo = rs.id_item where id_item_padre = "'+localStorage.tmp_id_item+'" order by rs.descripcion');
@@ -599,7 +609,7 @@ function ConsultaItemsCarga(tx, results) {
 		$("#5").val("Si@13").trigger("change");			
 		$("#1").html("Dirección: "+localStorage.lc_dir);
       	setTimeout(function () {	console.log("Trigger 2");
-      		$("#6").val("NO@16").trigger("change");		
+      		$("#6").val("NO@16").trigger("change");
 	      	setTimeout(function () {	console.log("POne FOco");
 	      		$("#4").focus();
 	      	}, 90);
