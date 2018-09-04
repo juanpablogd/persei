@@ -38,11 +38,18 @@ function ConsultaItemsCarga(tx, results) {
 		alerta("Persei","Debe descargar la configuracíon del servidor","Ok","descargar.html");
 	}else{
 		for (j = 0; j < len; j++){
-			var sql = 'select distinct num_medidor,ctacto,direccion,nombre1,nombre2,apellido1,apellido2,telefono,uso,min,max,r.id_envio '+
-			' from '+results.rows.item(j).esquema+'usuario_estadisticas e '+
-			'	left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "2") '+
-			'order by r.id_envio,CAST(order_lectura as integer)';
-					console.log(sql);
+			var sql = '';
+			if (localStorage.nombre_form.toLowerCase().indexOf("eaab") >= 0){
+				sql = 'select distinct num_medidor,ctacto,direccion,nombre,telefono,uso,min,max,r.id_envio '+
+					' from '+results.rows.item(j).esquema+'usuarios_ruta e '+
+					'	left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "2") '+
+					'order by r.id_envio,CAST(order_lectura as integer)';
+			} else {
+				sql = 'select distinct num_medidor,ctacto,direccion,nombre1,nombre2,apellido1,apellido2,telefono,uso,min,max,r.id_envio '+
+					' from '+results.rows.item(j).esquema+'usuario_estadisticas e '+
+					'	left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "2") '+
+					'order by r.id_envio,CAST(order_lectura as integer)';
+			} console.log(sql);
 			tx.executeSql(sql, [], ConsultaItemsCargaAsignResp,errorCB);
 	   	}
 	}
@@ -51,11 +58,12 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 	var lon = resultsV.rows.length;	console.log(lon);
 	if(lon > 0) $("#items").html('');
 	for (i = 0; i < lon; i++){
-		var num_medidor = resultsV.rows.item(i).num_medidor;	console.log(num_medidor);
+		var num_medidor = resultsV.rows.item(i).num_medidor;	//console.log(num_medidor);
 		var id_enviOld = resultsV.rows.item(i).id_envio;
 		var ctacto = resultsV.rows.item(i).ctacto;
 		var direccion = resultsV.rows.item(i).direccion;
 		var nombre1 = resultsV.rows.item(i).nombre1;
+		if(nombre1 == undefined) nombre1 = resultsV.rows.item(i).nombre;	//console.log(nombre1);
 		var apellido1 = resultsV.rows.item(i).apellido1;
 		var telefono = resultsV.rows.item(i).telefono;
 		var min = resultsV.rows.item(i).min;
@@ -68,7 +76,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 		var idUsuario=num_medidor+'|'+min+'|'+max+'|'+direccion;
 		if(id_enviOld!=null){
 			htmlTitulo = ' - ('+id_enviOld+')' + '<i id="'+id_enviOld+'|'+num_medidor+'" class="fa fa-close pull-right"></i>';
-			htmlPrint = '<i id="'+id_enviOld+'|'+num_medidor+'" class="fa fa-print pull-right" style="font-size:32px"></i>'
+			htmlPrint = '<i id="p'+id_enviOld+'" class="fa fa-print pull-right" style="font-size:32px"></i>'
 			estilo="success";
 			idUsuario="";
 		}else{ //SI ES AUTOMATICO INGRESA DE UNA
@@ -117,7 +125,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 			})(esquema),null);
 		}
 
-		$('div[id*='+num_medidor+']').click(function(e){
+		$('div[id*="'+num_medidor+'"]').click(function(e){
 			var mId = $(this).attr('id');	//console.log(mId);
 		    var n=mId.split("|");			//console.log(n[0]);	console.log(n[1]);	console.log(n[2]);
 		    localStorage.lc_med = n[0];
@@ -128,7 +136,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 		    setTimeout(function(){ window.location = "formulario.html"; }, 70);
 		});
 
-		$('i[id*='+id_enviOld+']').click(function(e){
+		$('i[id^='+id_enviOld+']').click(function(e){
 			var mId = $(this).attr('id');	console.log(mId);
 		    var n=mId.split("|");			//console.log(n[0]);	console.log(n[1]);	console.log(n[2]);
 		        bootbox.hideAll();
@@ -140,7 +148,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 				      label: "Si",
 				      className: "btn-success",
 				      callback: function() {
-						db.transaction(function (tx) { tx.executeSql('DELETE FROM '+ localStorage.esquema + 't_video where id_envio = "'+n[0]+'"')});
+						db.transaction(function (tx) {tx.executeSql('DELETE FROM '+ localStorage.esquema + 't_video where id_envio = "'+n[0]+'"')});
 						db.transaction(function (tx) {tx.executeSql('DELETE FROM '+ localStorage.esquema + 't_fotos where id_envio = "'+n[0]+'"')});
 						db.transaction(function (tx) {tx.executeSql('DELETE FROM '+ localStorage.esquema + 't_rtas_formulario where id_envio = "'+n[0]+'"')});
 						db.transaction(function (tx) {tx.executeSql('DELETE FROM '+ localStorage.esquema + 't_asignacion_lugar where id_envio = "'+n[0]+'"')});
@@ -156,7 +164,37 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 				    }
 				  }
 				});
-		});
+		});	//console.log(id_enviOld);
+		if(id_enviOld!=null){
+			$('#p'+id_enviOld+'').click(function(e){
+				var mId = $(this).attr('id');	console.log(mId);
+			    var n=mId.split("|");			//console.log(n[0]);	console.log(n[1]);	console.log(n[2]);
+			    localStorage.imprimeIdenvio = n[2];
+			    //setTimeout(function(){ window.location = "imprimeLectura.html"; }, 70);
+				bootbox.hideAll();
+				bootbox.dialog({
+				  message: " ¿Está seguro que desea IMPRIMIR la lectura?",
+				  title: "<span class=\"glyphicon glyphicon-warning-sign rojo \"></span> Persei - Guardar",
+				  buttons: {
+				    success: {
+				      label: "Si",
+				      className: "btn-success",
+				      callback: function() {
+
+				      }
+				    },
+				    main: {
+				      label: "No",
+				      className: "btn-primary",
+				      callback: function() {
+				        
+				      }
+				    }
+				  }
+				});
+
+			});
+		}
 
 		$("#refNotificacion").hide();	
    	}

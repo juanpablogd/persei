@@ -570,7 +570,7 @@ function ConsultaItemsCarga(tx, results) {
 			if(results.rows.item(i).valor != null) { $('#'+id_item).append('<option value="'+results.rows.item(i).valor+'@'+results.rows.item(i).id_add+'">'+results.rows.item(i).descripcion+'</option>'); }	
 		}else if (rta == "LISTA") {
 			if(id_item_last != id_item){
-				$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="select control-label"" >'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'"></label></label></div>');
+				$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="select control-label"" >'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'"></label></label><br></div>');
 				$("#num_preguntas").html(parseInt(num_actual) + 1);	
 			}
 			if(results.rows.item(i).valor != null) { $('#f'+id_item).append('<input type="checkbox" name="'+id_item+'" id="'+id_item+'" value="'+results.rows.item(i).valor+'" visible="true"> '+results.rows.item(i).descripcion+'<br>'); }	
@@ -865,19 +865,20 @@ function GuardarItemsExe(tx) {
 	localStorage.feature="";
 	localStorage.geometria="";
 	console.log("Almacenamiento Exitoso");
-	if(asignado=="t"){	//si es asignado
-		alerta("Persei - Guardar","Información Guardada exitosamente","Ok","mapa/mobile-jq.html");
-	}else{
-        if (localStorage.nombre_form.toLowerCase().indexOf("tubo") >= 0){
-            alerta("Persei - Guardar","Información Guardada exitosamente","Ok","listaTubos.html");
-        }else if (localStorage.nombre_form.toLowerCase().indexOf("consumo") >= 0){
-        	localStorage.siguiente = "SI";
-            alerta("Persei - Guardar","Información Guardada exitosamente","Ok","listaLectura.html");
-        }else{
-            alerta("Persei - Guardar","Información Guardada exitosamente","Ok","principal.html");
-        }
-	}
-
+	setTimeout(function(){ 
+		if(asignado=="t"){	//si es asignado
+			alerta("Persei - Guardar","Información Guardada exitosamente","Ok","mapa/mobile-jq.html");
+		}else{
+	        if (localStorage.nombre_form.toLowerCase().indexOf("tubo") >= 0){
+	            alerta("Persei - Guardar","Información Guardada exitosamente","Ok","listaTubos.html");
+	        }else if (localStorage.nombre_form.toLowerCase().indexOf("consumo") >= 0){
+	        	localStorage.siguiente = "SI";
+	            alerta("Persei - Guardar","Información Guardada exitosamente","Ok","listaLectura.html");
+	        }else{
+	            alerta("Persei - Guardar","Información Guardada exitosamente","Ok","principal.html");
+	        }
+		}
+	}, 99);
 }
 /***FIN GUARDAR ITEMS***********************************************************************************************************************************************************************/
 /****CONSULTA GENERAL********CONSULTA GENERAL********CONSULTA GENERAL********CONSULTA GENERAL********CONSULTA GENERAL****/
@@ -989,8 +990,6 @@ $(document).ready(function(){
 	});
 
 	$("#add_video").click(function() {	console.log(localStorage.video_obligatorio);
-		
-		if(localStorage.video_obligatorio == "N") localStorage.video_obligatorio = 0;
 		if (contar_videos() == localStorage.video_obligatorio){
 			msj_peligro("Máximo de Videos permitidos: "+ localStorage.video_obligatorio);
 			return false;
@@ -1007,6 +1006,8 @@ $(document).ready(function(){
 		$("#Lid_geometria").hide();
 		$("#id_geometria").hide();
 	}
+	if(localStorage.foto_obligatorio == "N") localStorage.foto_obligatorio = 0;
+	if(localStorage.video_obligatorio == "N") localStorage.video_obligatorio = 0;
 	
 	
 	

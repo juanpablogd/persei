@@ -69,7 +69,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 	    localStorage.video_obligatorio = n[6];
 	    localStorage.geometria_obligatorio = n[7];
 	    localStorage.tipo_geometria = n[8];				console.log(localStorage.tipo_geometria);
-	    localStorage.foto_max = n[9];				console.log(localStorage.tipo_geometria);
+	    localStorage.foto_max = n[9];					console.log(localStorage.tipo_geometria);
 	    
 	    localStorage.nombre_form = $(this).text();
 		localStorage.asignado = "f"; 		//False (No asignado)
@@ -80,7 +80,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 		//Si es formulario de TUBO
 		if (localStorage.nombre_form.toLowerCase().indexOf("tubo") >= 0){
 			setTimeout(function(){ window.location = "listaTubos.html"; }, 50);
-		}else if(n[1] == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("consumo") >= 0){
+		}else if(n[1] == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("lectura") >= 0){
 			setTimeout(function(){ window.location = "listaLectura.html"; }, 50);
 		}
 		else{
