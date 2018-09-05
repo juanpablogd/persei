@@ -63,49 +63,90 @@
 		}
 
 		#searchForm{
-    display: absolute;
-    width: 100%;
-    margin-left: 11%;
-    margin-top: 70px;
-}
+		    display: absolute;
+		    width: 100%;
+		    margin-left: 11%;
+		    margin-top: 70px;
+		}
 
-#searchForm .form-row .col {
-  margin: 0;
-  padding: 0;
+		#searchForm .form-row .col {
+		  margin: 0;
+		  padding: 0;
+		}
+		#searchForm .form-row button, #searchForm .form-row input {
+		  border: 1px solid #DBDBDB;
+		  border-radius: 0;
+		  margin: 0;
+		}
+		#searchForm .form-row input {
+		  border-right: 0px;
+		  width: 750px;
+		}
+		#searchForm .form-row button {
+		  width: 50px;
+		}
+		#searchForm .form-row button i{
+		 color: #FFFFFF;
+		}
+		#searchForm .form-row button:hover{
+		    background: #2ED654 !important;
+		}
+		#imaginary_container{
+		    margin-top:0%; /* Don't copy this */
+		    margin-bottom: 2%;
+		}
+		.stylish-input-group .input-group-addon{
+		    background: white !important; 
+		}
+		.stylish-input-group .form-control{
+			border-right:0; 
+			box-shadow:0 0 0; 
+			border-color:#ccc;
+		}
+		.stylish-input-group button{
+		    border:0;
+		    background:transparent;
+		}
+		.notice {
+    padding: 15px;
+    background-color: #fafafa;
+    border-left: 6px solid #7f7f84;
+    margin-bottom: 10px;
+    -webkit-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+       -moz-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+            box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
 }
-#searchForm .form-row button, #searchForm .form-row input {
-  border: 1px solid #DBDBDB;
-  border-radius: 0;
-  margin: 0;
+.notice-sm {
+    padding: 10px;
+    font-size: 80%;
 }
-#searchForm .form-row input {
-  border-right: 0px;
-  width: 750px;
+.notice-lg {
+    padding: 35px;
+    font-size: large;
 }
-#searchForm .form-row button {
-  width: 50px;
+.notice-success {
+    border-color: #80D651;
 }
-#searchForm .form-row button i{
- color: #FFFFFF;
+.notice-success>strong {
+    color: #80D651;
 }
-#searchForm .form-row button:hover{
-    background: #2ED654 !important;
+.notice-primary {
+    border-color: #45ABCD;
 }
-#imaginary_container{
-    margin-top:2%; /* Don't copy this */
-    margin-bottom: 2%;
+.notice-primary>strong {
+    color: #45ABCD;
 }
-.stylish-input-group .input-group-addon{
-    background: white !important; 
+.notice-warning {
+    border-color: #FEAF20;
 }
-.stylish-input-group .form-control{
-	border-right:0; 
-	box-shadow:0 0 0; 
-	border-color:#ccc;
+.notice-warning>strong {
+    color: #FEAF20;
 }
-.stylish-input-group button{
-    border:0;
-    background:transparent;
+.notice-danger {
+    border-color: #d73814;
+}
+.notice-danger>strong {
+    color: #d73814;
 }
 	</style>
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -166,8 +207,16 @@
                         <button type="submit">
                             <span class="glyphicon glyphicon-search"></span>
                         </button>  
-                    </span>
+                     </span>
+                     <select class="form-control" id="SlctFilterOK" style="width: 70px;">
+                        <option value="1">Faltan</option>
+					    <option value="2">OK</option>
+					    <option value="3">Todos</option>
+					</select> 
                 </div>
+                
+                   
+                
             </div>
         </div>
 	</div>

@@ -40,25 +40,33 @@ function ConsultaItemsCarga(tx, results) {
 		for (j = 0; j < len; j++){
 			var sql = '';
 			var InputBuscar=sessionStorage.getItem("InputBuscar");
-			var where='';
+			var where=' ';
+			if($("#SlctFilterOK").val()==1){
+				var where='where r.id_envio is null ';
+			}else if($("#SlctFilterOK").val()==2){
+				var where='where r.id_envio != "" ';
+			}else if($("#SlctFilterOK").val()==3){
+				var where='where 1=1 ';
+			}
+
+			
 			if(InputBuscar=== null){
-				where='';
 				console.log("no existe");
 			}else{
-				where=" where num_medidor like '%"+InputBuscar+"%'  or direccion like '%"+InputBuscar+"%'   or ctacto like '%"+InputBuscar+"%'";	
+				where=where+ " and  num_medidor like '%"+InputBuscar+"%'  or direccion like '%"+InputBuscar+"%'   or ctacto like '%"+InputBuscar+"%'";	
 				//console.log(InputBuscar);
 				//console.log("existe");
 			}
 			if (localStorage.nombre_form.toLowerCase().indexOf("eaab") >= 0){
 				sql = 'select distinct num_medidor,ctacto,direccion,nombre,telefono,uso,min,max,r.id_envio '+
 					' from '+results.rows.item(j).esquema+'usuarios_ruta e '+
-					'	left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "2") '+
+					'	left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "23") '+
 					where+
 					'order by r.id_envio,CAST(order_lectura as integer)';
 			} else {
 				sql = 'select distinct num_medidor,ctacto,direccion,nombre1,nombre2,apellido1,apellido2,telefono,uso,min,max,r.id_envio '+
 					' from '+results.rows.item(j).esquema+'usuario_estadisticas e '+
-					'	left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "2") '+
+					'	left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "23") '+
 					where+
 					'order by r.id_envio,CAST(order_lectura as integer)';
 			} console.log(sql);
@@ -86,11 +94,13 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 		var htmlPrint="";
 		var estilo="primary";
 		var idUsuario=num_medidor+'|'+min+'|'+max+'|'+direccion;
+		var add='';
 		if(id_enviOld!=null){
-			htmlTitulo = ' - ('+id_enviOld+')' + '<i id="'+id_enviOld+'|'+num_medidor+'" class="fa fa-close pull-right"></i>';
+			htmlTitulo = '<i id="'+id_enviOld+'|'+num_medidor+'" class="fa fa-close pull-right"></i>';
 			htmlPrint = '<i id="p'+id_enviOld+'" class="fa fa-print pull-right" style="font-size:32px"></i>'
 			estilo="success";
 			idUsuario="";
+			add='Existe Usuario:&nbsp;<label id="eu_'+num_medidor+'"></label><br>lectura:&nbsp;<label id="le_'+num_medidor+'"></label><br>';
 		}else{ //SI ES AUTOMATICO INGRESA DE UNA
 			if(localStorage.siguiente == "SI"){	//console.log("PUM!!!");
 				localStorage.siguiente = "";
@@ -101,17 +111,15 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 				setTimeout(function(){ window.location = "formulario.html"; }, 70);
 			}
 		}
-		$("#items").append('<div class="panel panel-'+estilo+'" id="'+idUsuario+'">'+
-			'<div class="panel-heading" style="font-size: 16px;">Medidor: '+num_medidor+htmlTitulo+'</div>'+
-			    '<div class="panel-body" style="font-size: 12px;">'+
-					'<ul class="list-group">'+
-						'Dirección:&nbsp;<label>'+direccion+'</label>&nbsp;'+
-						'Uso:&nbsp;<label>'+uso+'</label>&nbsp;'+
-						'Existe Usuario:&nbsp;<label id="eu_'+num_medidor+'"></label>&nbsp;'+
-						'lectura:&nbsp;<label id="le_'+num_medidor+'"></label>&nbsp;'+
+		
+		console.log(num_medidor)
+
+		$("#items").append('<div class="notice notice-'+estilo+'" id="'+idUsuario+'">'+htmlTitulo+
+				 		'<small>Dirección:&nbsp;<label>'+direccion+'</label></small><br>'+
+				 		'<small>Medidor:<label> '+num_medidor+'</label></small><br>'+
+			    		'<small>Uso:&nbsp;<label>'+uso+'</label></small><br>'+
+						add+
 						htmlPrint+
-					'</ul>'+
-			    '</div>'+
 			'</div>'
 		);
 		if(id_enviOld!=null){
@@ -164,7 +172,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 						db.transaction(function (tx) {tx.executeSql('DELETE FROM '+ localStorage.esquema + 't_fotos where id_envio = "'+n[0]+'"')});
 						db.transaction(function (tx) {tx.executeSql('DELETE FROM '+ localStorage.esquema + 't_rtas_formulario where id_envio = "'+n[0]+'"')});
 						db.transaction(function (tx) {tx.executeSql('DELETE FROM '+ localStorage.esquema + 't_asignacion_lugar where id_envio = "'+n[0]+'"')});
-						setTimeout(function(){ db.transaction(ConsultaItems); }, 800);
+						setTimeout(function(){ $("#items").html('');db.transaction(ConsultaItems); }, 800);
 				      }
 				    },
 				    main: {
@@ -235,7 +243,12 @@ $(document).ready(function(){
 		     	db.transaction(ConsultaItems);
 		     }
 		    // console.log("ole papa");
-    }, 1000 );
+    }, 500 );
 	     
+	});
+	$('#SlctFilterOK').change(function() {
+  		//sessionStorage.setItem("InputBuscar", $('#InputBuscar').val());
+  		$("#items").html('');
+		db.transaction(ConsultaItems);
 	});
 });
