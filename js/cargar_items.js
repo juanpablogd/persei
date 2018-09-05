@@ -319,22 +319,20 @@ function SeleccionItemsOcultar(tx) {	//console.log('select iadd.id_rta,iadd.id_i
 	tx.executeSql('select iadd.id_rta,iadd.id_item from '+esquema+'p_items_adicional iadd inner join '+esquema+'p_rtas_seleccion rtas on iadd.id_rta = rtas.id inner join '+esquema+'p_items_formulario item on item.id_item = rtas.id_item where id_categoria = "'+localStorage.id_categoria+'" and item.id_item = "'+localStorage.tmp_id_item+'" order by iadd.id_item desc', [], SeleccionItemsOcultarResult,errorCB);
 }
 function SeleccionItemsOcultarResult(tx, results) {
-	var len = results.rows.length;	//alert(len);
+	var len = results.rows.length;		console.log(len);
 	for (i = 0; i < len; i++){
 		var id_item = results.rows.item(i).id_item;
-		var id_rta = results.rows.item(i).id_rta; //console.log(localStorage.id_rta + " Loop: " + id_rta);
+		var id_rta = results.rows.item(i).id_rta;	console.log(localStorage.tmp_id_item + " Loop: " + id_rta);
 		if(localStorage.tmp_id_rta == id_rta){		//console.log("Mostrar elemento: "+id_item);
-			$("#l"+id_item+"").show();
-			$("#"+id_item+"").show();
 			$("#"+id_item+"").prop('required',true);
 			$("#"+id_item+"").attr('visible','true');
 			$("#f"+id_item+"").addClass('required');
+			$("#f"+id_item+"").show();
 		}else{	//console.log("Ocultar elemento: "+id_item);
 			$("#"+id_item+"").removeAttr('required');
 			$("#"+id_item+"").attr('visible','false');
 			$("#f"+id_item+"").removeClass('required');
-			$("#l"+id_item+"").hide();
-			$("#"+id_item+"").hide();			
+			$("#f"+id_item+"").hide();	
 		}
    	}
    	//si la novedad es cambio de medidor, pone el valor por defecto
@@ -342,15 +340,28 @@ function SeleccionItemsOcultarResult(tx, results) {
    		$("#18").val($("#2").val());
    	}
    	//SI reporta novedad, pone NO en los campos por default
-   	if(localStorage.tmp_id_rta=="15"){ console.log("Si hay novedad");
+   	if(localStorage.tmp_id_rta=="15"){	//console.log("Si hay novedad");
    		$("#7").val("No@10");
    		$("#9").val("No@22");
    		$("#11").val("No@24");
    		$("#12").val("No@26");
    		$("#17").val("No@28");
    	}
-
-   
+   	//SI ES ACUEDUCTO
+   	if (localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("eaab") >= 0){
+   		if (localStorage.tmp_id_item == "135"){
+   			var valPredio = $("#135").val();
+   			if(valPredio.toLowerCase().indexOf("si") >= 0){
+   				localStorage.foto_obligatorio = 0;
+   				$("#tabFotos").hide();
+				$("#add_foto").hide();
+   			}else{
+   				localStorage.foto_obligatorio = 1;
+   				$("#tabFotos").show();
+				$("#add_foto").show();
+   			}
+   		}
+   	}
 }
 function SeleccionItemsFiltrar(tx) {	//console.log('select rs.id as id_add,rs.valor,rs.descripcion,id_item_hijo,vr_padre from '+esquema+'p_items_filtro itf left join '+esquema+'p_rtas_seleccion rs on itf.id_item_hijo = rs.id_item where id_item_padre = "'+localStorage.tmp_id_item+'" order by rs.descripcion');
  	tx.executeSql('select rs.id as id_add,rs.valor,rs.descripcion,id_item_hijo,vr_padre from '+esquema+'p_items_filtro itf left join '+esquema+'p_rtas_seleccion rs on itf.id_item_hijo = rs.id_item where id_item_padre = "'+localStorage.tmp_id_item+'" order by rs.descripcion', [], seleccionItemsFiltrarResult,errorCB);
@@ -386,8 +397,7 @@ function seleccionItemsFiltrarResult(tx, results) {
     }else $('#'+localStorage.id_select).html('No se encontró descripción!');
  }
 
-function getval(sel) {
-	console.log("Id: "+sel.id);
+function getval(sel) {	console.log("Id: "+sel.id);
 	var res = sel.value.split("@");
 	//VALOR RESPUESTA
 	var tmp_id_item_vr = res[0];
@@ -499,7 +509,7 @@ function ConsultaItemsCarga(tx, results) {
 		
 		var rta = results.rows.item(i).tipo_rta;
 		var id_item = results.rows.item(i).id_item;
-		var descripcion_item = convertHTMLEntity(results.rows.item(i).descripcion_item); descripcion_item = descripcion_item.replace(/&lt;/g, "<"); descripcion_item = descripcion_item.replace(/&gt;/g, ">").toUpperCase().trim(); console.log(descripcion_item);
+		var descripcion_item = convertHTMLEntity(results.rows.item(i).descripcion_item); descripcion_item = descripcion_item.replace(/&lt;/g, "<"); descripcion_item = descripcion_item.replace(/&gt;/g, ">").toUpperCase().trim(); //console.log(descripcion_item);
 		var obligatorio = ""; //console.log(results.rows.item(i).obligatorio.trim());
 		if(results.rows.item(i).obligatorio.trim() == "S") {obligatorio = "required";}
 
@@ -573,7 +583,7 @@ function ConsultaItemsCarga(tx, results) {
 				$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="select control-label"" >'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'"></label></label><br></div>');
 				$("#num_preguntas").html(parseInt(num_actual) + 1);	
 			}
-			if(results.rows.item(i).valor != null) { $('#f'+id_item).append('<input type="checkbox" name="'+id_item+'" id="'+id_item+'" value="'+results.rows.item(i).valor+'" visible="true"> '+results.rows.item(i).descripcion+'<br>'); }	
+			if(results.rows.item(i).valor != null) { $('#f'+id_item).append('<input type="checkbox" name="'+id_item+'" id="'+id_item+'" value="'+results.rows.item(i).valor+'" visible="true"/> <label name="lr'+id_item+'" id="lr'+id_item+'">'+results.rows.item(i).descripcion+'</label><br>'); }	
 		}else if (rta == "LECTOR" && id_item_last != id_item) {
 			$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="control-label">'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'"></label></label><input type="text" class="form-control" name="'+id_item+'" id="'+id_item+'" placeholder="'+descripcion_item+'" value="" '+obligatorio+' visible="true" disabled="true"/><button onclick="scanea('+id_item+')" id="btn_scanea'+id_item+'" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-chevron-up"></span> Escanear <span class="glyphicon glyphicon-qrcode"></span></button></div>');	/* $('#'+id_item).textinput(); */
 			$("#num_preguntas").html(parseInt(num_actual) + 1);
@@ -601,17 +611,21 @@ function ConsultaItemsCarga(tx, results) {
 	id_item_last = id_item;
    	}
 	/*	TERMINAR DE CARGAR LOS INPUTS */
-	if (localStorage.nombre_form.toLowerCase().indexOf("consumo") >= 0){
+	if (localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("lectura") >= 0){
 		//LECTURA
     	$("#lr4").text(parseFloat(localStorage.lc_min)+(localStorage.lc_max-localStorage.lc_min)/2);	//Profundidad IDITEM = 94 para POZO
+    	$("#lr136").text(parseFloat(localStorage.lc_min)+(localStorage.lc_max-localStorage.lc_min)/2);	//Profundidad IDITEM = 94 para POZO
 		//Pone valores x Defecto
 		console.log("Trigger 1");
-		$("#5").val("Si@13").trigger("change");			
+		$("#5").val("Si@13").trigger("change");
+		$("#135").val("SI@638").trigger("change");
 		$("#1").html("Dirección: "+localStorage.lc_dir);
+		$("#22").html("Dirección: "+localStorage.lc_dir);
       	setTimeout(function () {	console.log("Trigger 2");
       		$("#6").val("NO@16").trigger("change");
 	      	setTimeout(function () {	console.log("POne FOco");
 	      		$("#4").focus();
+	      		$("#136").focus();
 	      	}, 90);
       	}, 260);
 	}
@@ -642,10 +656,10 @@ function ConsultaItemsCarga(tx, results) {
 	});
     //Compara si tiene valor por defecto
 	$(':input').blur(function(){	console.log("BLur");
-		var inVal = $(this).val().trim();	//Valor del input que pierde el FOCO
+		var inVal = $(this).val().trim();	//console.log(inVal);//Valor del input que pierde el FOCO
 		var inID = $(this).attr('id');		//ID del input que pierde el FOCO
 		var inLabel = $("#l"+inID).text();	//Label del input que pierde el FOCO
-		var valDefecto = $("#lr"+inID).text().trim();	//Vr BD de input que pierde el FOCO
+		var valDefecto = $("#lr"+inID).text().trim();	//console.log(valDefecto);//Vr BD de input que pierde el FOCO
 		var vaTipo = $(this).attr('type');	//console.log(vaTipo);
 
 		if(inVal != ''){	
@@ -655,15 +669,15 @@ function ConsultaItemsCarga(tx, results) {
 				}else{
 					$(this).val(numeral(inVal).format('0.[000]'));
 				}
-			}else if(vaTipo=="text" && (inID =="2" || inID =="26") && inVal != ""){	console.log("Calcula id escrito: "+inVal);
+			}else if(vaTipo=="text" && (inID =="2" || inID =="26") && inVal != ""){	//console.log("Calcula id escrito: "+inVal);
 				cargaDefecto('ids',inVal);
 			}
 			if(valDefecto!=''){
 				var digitado = inVal.split("@");
-				if(vaTipo=="number"){ //console.log(numeral(inVal).value());
+				if(vaTipo=="number"){ console.log(numeral(inVal).value());
 					var min = 0;
 					var max = 999;
-			        if (localStorage.nombre_form.toLowerCase().indexOf("consumo") >= 0){
+			        if (localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("lectura") >= 0){
 						min = localStorage.lc_min;		//console.log(min);
 						max = localStorage.lc_max;
 			        }else{
@@ -673,7 +687,7 @@ function ConsultaItemsCarga(tx, results) {
 
 					var dig = numeral(digitado[0]).value();
 					if(dig < min || dig > max){	
-				        if (localStorage.nombre_form.toLowerCase().indexOf("consumo") >= 0){
+				        if (localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("lectura") >= 0){
 				        	msj_peligro(inLabel+"</br>El valor '"+digitado[0]+"' NO se encuentra en el rango esperado: 	"+ (Math.round(min * 1000) / 1000) + " - " + (Math.round(max * 1000) / 1000),10)
 				        }else{
 				        	msj_peligro(inLabel+"</br>El valor '"+digitado[0]+"' NO se encuentra en el rango esperado: 	"+ (Math.round(min * 1000) / 1000) + " - " + (Math.round(max * 1000) / 1000),10);
@@ -706,12 +720,10 @@ function OcultartemsResult(tx, results) {
 	var len = results.rows.length;	//alert(len);
 	for (i = 0; i < len; i++){
 		var id_item = results.rows.item(i).id_item;
-		
-		$("#l"+id_item+"").hide();
 		$("#"+id_item+"").removeAttr('required');
-		$("#"+id_item+"").attr('visible','false');
 		$("#f"+id_item+"").removeClass("required");
-		$("#"+id_item+"").hide();
+		$("#"+id_item+"").attr('visible','false');
+		$("#f"+id_item+"").hide();
    	}
 }
 /***FIN OCULTAR ITEMS*************************************************************************************************************************************************************/
@@ -733,9 +745,11 @@ function comprobarCamposRequired(){
 	}
 	
 	if(correcto==true){
-	   $(':input').each(function () {	//console.log($(this).val());
+		var idLastchecked;
+		var checked;
+	   	$(':input').each(function () {	//console.log($(this).attr('id') + " - " + $(this).val() + " - " + $(this).attr("required"));
 			if($(this).attr("required")){
-				var valorCampo = $(this).val();
+				var valorCampo = $(this).val();		
 				if(valorCampo == '' || valorCampo === ''){
 					correcto=false;
 					var currentId = $(this).attr('id');	//console.log(currentId);
@@ -744,13 +758,23 @@ function comprobarCamposRequired(){
 					$("#"+currentId).focus();
 					return false;
 				}else{
-					var vaTipo = $(this).attr('type');	console.log("Tipo:"+vaTipo+". Es número:"+isNumber(valorCampo));
+					var vaTipo = $(this).attr('type');	//console.log("Tipo:"+vaTipo+". Es número:"+isNumber(valorCampo));
+					var currentId = $(this).attr('id');	//console.log(currentId);
 					if(vaTipo=="number" && !isNumber(valorCampo)){
 						correcto=false;
-						var currentId = $(this).attr('id');	//console.log(currentId);
 						msj_peligro($("#l"+currentId).text()+" No valido: "+valorCampo);
 						activaTab('tab1_form');
 						$("#"+currentId).focus();
+					}if(vaTipo=="checkbox"){
+						correcto = false;
+						$("input[id='"+currentId+"']").each(function() {	//console.log($(this).is(':checked'));
+							if ($(this).is(':checked')) correcto=true;
+						});	//console.log(correcto);
+						if (!correcto){
+							msj_peligro("Debe marcar una opción: " +  $("#l"+currentId).text());
+							activaTab('tab1_form');
+							return false;
+						}
 					}
 				}
 			}
@@ -761,7 +785,6 @@ function comprobarCamposRequired(){
 			correcto=false;
 			alert("No hay coordenadas registradas, active el GPS y busque un lugar abierto");
 	}
-	
 	
 	if(correcto==true){	//localStorage.foto_obligatorio == "S" &&	contar_fotos
 		//GUARDA FOTOS
@@ -871,7 +894,7 @@ function GuardarItemsExe(tx) {
 		}else{
 	        if (localStorage.nombre_form.toLowerCase().indexOf("tubo") >= 0){
 	            alerta("Persei - Guardar","Información Guardada exitosamente","Ok","listaTubos.html");
-	        }else if (localStorage.nombre_form.toLowerCase().indexOf("consumo") >= 0){
+	        }else if (localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("lectura") >= 0){
 	        	localStorage.siguiente = "SI";
 	            alerta("Persei - Guardar","Información Guardada exitosamente","Ok","listaLectura.html");
 	        }else{
@@ -958,9 +981,7 @@ $(document).ready(function(){
 	    $('div#' + $(this).attr('data-href')).show();
 	});
 	
-	$("#add_foto").click(function() {
-		//alert(contar_fotos());
-		if(localStorage.foto_max == "N") localStorage.foto_max = 0;
+	$("#add_foto").click(function() {	//alert(contar_fotos());
 		if (contar_fotos() == localStorage.foto_max){
 			msj_peligro("Máximo de fotos permitidas: "+ localStorage.foto_max);
 			return false;
@@ -1007,13 +1028,14 @@ $(document).ready(function(){
 		$("#id_geometria").hide();
 	}
 	if(localStorage.foto_obligatorio == "N") localStorage.foto_obligatorio = 0;
+	if(localStorage.foto_obligatorio == "S") localStorage.foto_obligatorio = 1;
 	if(localStorage.video_obligatorio == "N") localStorage.video_obligatorio = 0;
-	
-	
+	if(localStorage.video_obligatorio == "S") localStorage.video_obligatorio = 1;
 	
 	//VALIDA SI CAPTURA FOTO
 	if (localStorage.foto_obligatorio == 0){
 		$("#tabFotos").hide();
+		$("#add_foto").hide();
 	}
 	
 	//VALIDA SI CAPTURA VIDEO  
