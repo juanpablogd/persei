@@ -39,15 +39,27 @@ function ConsultaItemsCarga(tx, results) {
 	}else{
 		for (j = 0; j < len; j++){
 			var sql = '';
+			var InputBuscar=sessionStorage.getItem("InputBuscar");
+			var where='';
+			if(InputBuscar=== null){
+				where='';
+				console.log("no existe");
+			}else{
+				where=" where num_medidor like '%"+InputBuscar+"%'  or direccion like '%"+InputBuscar+"%'   or ctacto like '%"+InputBuscar+"%'";	
+				//console.log(InputBuscar);
+				//console.log("existe");
+			}
 			if (localStorage.nombre_form.toLowerCase().indexOf("eaab") >= 0){
 				sql = 'select distinct num_medidor,ctacto,direccion,nombre,telefono,uso,min,max,r.id_envio '+
 					' from '+results.rows.item(j).esquema+'usuarios_ruta e '+
 					'	left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "2") '+
+					where+
 					'order by r.id_envio,CAST(order_lectura as integer)';
 			} else {
 				sql = 'select distinct num_medidor,ctacto,direccion,nombre1,nombre2,apellido1,apellido2,telefono,uso,min,max,r.id_envio '+
 					' from '+results.rows.item(j).esquema+'usuario_estadisticas e '+
 					'	left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "2") '+
+					where+
 					'order by r.id_envio,CAST(order_lectura as integer)';
 			} console.log(sql);
 			tx.executeSql(sql, [], ConsultaItemsCargaAsignResp,errorCB);
@@ -199,9 +211,31 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 		$("#refNotificacion").hide();	
    	}
 }
-
+var delay = (function(){
+  var timer = 0;
+  return function(callback, ms){
+    clearTimeout (timer);
+    timer = setTimeout(callback, ms);
+  };
+})();
 $(document).ready(function(){
 	$("#notificacion").hide();
+	sessionStorage.removeItem("InputBuscar");
 	// CARGAR Listado de usuarios de lectura
 	db.transaction(ConsultaItems);
+	$('#InputBuscar').on('keyup', function() {
+		var valor=this.value;
+		 delay(function(){
+	      if (valor.length > 3) {
+	      	    $("#items").html('');
+				sessionStorage.setItem("InputBuscar", valor);
+		     	db.transaction(ConsultaItems);
+		     }else{
+		     	sessionStorage.removeItem("InputBuscar");
+		     	db.transaction(ConsultaItems);
+		     }
+		    // console.log("ole papa");
+    }, 1000 );
+	     
+	});
 });
