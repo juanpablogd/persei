@@ -53,7 +53,7 @@ var app = {
                         setTimeout(function(){ 
                             if (localStorage.nombre_form.toLowerCase().indexOf("tubo") >= 0){
                                 window.location = "listaTubos.html";
-                            }else if (localStorage.nombre_form.toLowerCase().indexOf("consumo") >= 0){
+                            }else if (localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("lectura") >= 0){
                                 window.location = "listaLectura.html";
                             }else{
                                 window.location = "principal.html";

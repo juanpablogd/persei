@@ -795,7 +795,9 @@ function comprobarCamposRequired(){		//console.log($("#21").is(':visible'));
 				if(valorCampo == '' || valorCampo === ''){
 					correcto=false;
 					var currentId = $(this).attr('id');	//console.log(currentId);
-					msj_peligro("Debe diligenciar correctamente: " +  $("#l"+currentId).text());
+					var txtVal =  $("#l"+currentId).text();
+					if(localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("lectura") >= 0 && currentId == "136" ) txtVal = " Lectura ";
+					msj_peligro("Debe diligenciar correctamente: " + txtVal);
 					activaTab('tab1_form');
 					$("#"+currentId).focus();
 					return false;

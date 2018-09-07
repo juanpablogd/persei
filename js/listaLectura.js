@@ -97,10 +97,10 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 		var add='';
 		if(id_enviOld!=null){
 			htmlTitulo = '<i id="'+id_enviOld+'|'+num_medidor+'" class="fa fa-close pull-right"></i>';
-			htmlPrint = '<i id="p'+id_enviOld+'" class="fa fa-print pull-right" style="font-size:32px"></i>'
+			htmlPrint = '<i id="p'+num_medidor+'" datos="" class="fa fa-print pull-right" style="font-size:32px"></i>'
 			estilo="success";
 			idUsuario="";
-			add='Existe Usuario:&nbsp;<label id="eu_'+num_medidor+'"></label><br>lectura:&nbsp;<label id="le_'+num_medidor+'"></label><br>';
+			add='Existe Usuario:&nbsp;<label id="eu_'+num_medidor+'"></label><br>lectura:&nbsp;<label id="le_'+num_medidor+'"></label>';
 		}else{ //SI ES AUTOMATICO INGRESA DE UNA
 			if(localStorage.siguiente == "SI"){	//console.log("PUM!!!");
 				localStorage.siguiente = "";
@@ -123,7 +123,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 		if(id_enviOld!=null){
 			var sql18 = 'SELECT distinct "'+num_medidor+'" as num_medidor,id_item,respuesta FROM '+
 					' lecturat_rtas_formulario r'+
-					' where (r.id_item = "4" or r.id_item = "5") and r.id_envio = "'+id_enviOld+'"';	console.log(sql18);
+					' where (r.id_item = "136" or r.id_item = "35") and r.id_envio = "'+id_enviOld+'"';	console.log(sql18);
 			tx.executeSql(sql18, [], 
 			(function(esquema){
 			   return function(tx,resulta2){
@@ -133,12 +133,12 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 			   			var id_item = resulta2.rows.item(l).id_item;	//console.log(idsig_tubo);
 			   			var respuesta = resulta2.rows.item(l).respuesta;
 
-			   			if(id_item == "4"){	//Si tiene TUBO
+			   			if(id_item == "136"){
 				   			$("#le_"+num_medidor).html(respuesta);
-			   			}else if(id_item == "5"){
+			   			}else if(id_item == "35"){
 			   				$("#eu_"+num_medidor).html(respuesta);
 			   			}
-			   		}	//console.log("Sale For");
+			   		}
 			   };
 			})(esquema),null);
 		}
@@ -184,10 +184,11 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 				});
 		});	//console.log(id_enviOld);
 		if(id_enviOld!=null){
-			$('#p'+id_enviOld+'').click(function(e){
-				var mId = $(this).attr('id');	console.log(mId);
-			    var n=mId.split("|");			//console.log(n[0]);	console.log(n[1]);	console.log(n[2]);
-			    localStorage.imprimeIdenvio = n[2];
+			$('#p'+num_medidor+'').click(function(e){
+				var mId = $(this).attr('id');	//console.log(mId);
+			    var n=mId.split("p");			//console.log(n[0]);	console.log(n[1]);	console.log(n[2]);
+			    var vrLectura = $('#le_'+n[1]+'').val();	console.log(vrLectura);
+
 			    //setTimeout(function(){ window.location = "imprimeLectura.html"; }, 70);
 				bootbox.hideAll();
 				bootbox.dialog({
@@ -198,7 +199,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 				      label: "Si",
 				      className: "btn-success",
 				      callback: function() {
-
+				      		crearFactura(n[1],vrLectura);
 				      }
 				    },
 				    main: {
