@@ -322,7 +322,7 @@ function SeleccionItemsOcultarResult(tx, results) {
 	var len = results.rows.length;		console.log(len);
 	for (i = 0; i < len; i++){
 		var id_item = results.rows.item(i).id_item;
-		var id_rta = results.rows.item(i).id_rta;	console.log(localStorage.tmp_id_item + " Loop: " + id_rta);
+		var id_rta = results.rows.item(i).id_rta;	//console.log(localStorage.tmp_id_item + " Loop: " + id_rta);
 		if(localStorage.tmp_id_rta == id_rta){		//console.log("Mostrar elemento: "+id_item);
 			$("#"+id_item+"").prop('required',true);
 			$("#"+id_item+"").attr('visible','true');
@@ -350,6 +350,13 @@ function SeleccionItemsOcultarResult(tx, results) {
    	//SI ES ACUEDUCTO
    	if (localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("eaab") >= 0){
    		if (localStorage.tmp_id_item == "135"){
+   			$("#21").prop('required',false);
+   			$("#f21").hide();	//confirmar Lectura
+   			$("#138").prop('required',false);
+   			$("#f138").hide();	//lectura mayor
+   			$("#140").prop('required',false);
+   			$("#f140").hide();	//lectura menor
+
    			var valPredio = $("#135").val();
    			if(valPredio.toLowerCase().indexOf("si") >= 0){
    				localStorage.foto_obligatorio = 0;
@@ -486,7 +493,45 @@ function loadFachada(idItem){
  		msj_peligro("Debe activar su ubicación GPS.");
  	}
  };
-    
+function validaLectura(min,max,id){	//alet("validaLectura");
+	var estado = "ok";
+	var valor = $("#"+id).val();
+	var inLabel = $("#l"+id).text();
+	var dig = numeral(valor).value();
+	if(dig < min){	
+		estado = "menor";
+	}else if(dig > max){
+		estado = "mayor";
+	}
+	if(estado == "menor" || estado == "mayor") msj_peligro(inLabel+"</br>El valor '"+valor+"' NO se encuentra en el rango esperado: 	"+ (Math.round(min * 1000) / 1000) + " - " + (Math.round(max * 1000) / 1000),10);
+	if (localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("lectura") >= 0){
+		if(id=136){
+			if(estado == "menor"){
+				$("#21").prop('required',true);
+				$("#f21").show();	//confirmar Lectura
+				$("#140").prop('required',false);
+				$("#f140").hide();
+				$("#138").prop('required',true);
+				$("#f138").show();
+			}else if(estado == "mayor"){
+				$("#21").prop('required',true);
+				$("#f21").show();	//confirmar Lectura
+				$("#140").prop('required',true);
+				$("#f140").show();
+				$("#138").prop('required',false);
+				$("#f138").hide();
+			}else{
+				$("#21").prop('required',false);
+				$("#f21").hide();	//confirmar Lectura
+				$("#140").prop('required',false);
+				$("#f140").hide();
+				$("#138").prop('required',false);
+				$("#f138").hide();
+			}
+		}
+	}
+	return estado;
+}
 /****************************************************************************************************************************************************************/
 function errorCB(err) {
 	// Esto se puede ir a un Log de Error dir�a el purista de la oficina, pero como este es un ejemplo pongo el MessageBox.Show :P
@@ -568,6 +613,9 @@ function ConsultaItemsCarga(tx, results) {
 			$("#num_preguntas").html(parseInt(num_actual) + 1);
 		}else if (rta == "CANTIDAD" && id_item_last != id_item) {
 			$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="control-label">'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'" style="color: white;"></label></label><input type="number" class="form-control" name="'+id_item+'" id="'+id_item+'" placeholder="'+descripcion_item+'" value="" '+obligatorio+' onkeypress="if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 46) event.returnValue = false;" visible="true"/></div>');	/* $('#'+id_item).textinput(); */
+			$("#num_preguntas").html(parseInt(num_actual) + 1);
+		}else if (rta == "CANTIDADOCULTO" && id_item_last != id_item) {
+			$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="control-label">'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'" style="color: white;"></label></label><input type="password" class="form-control" name="'+id_item+'" id="'+id_item+'" placeholder="'+descripcion_item+'" value="" '+obligatorio+' onkeypress="if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 46) event.returnValue = false;" visible="true"/></div>');	/* $('#'+id_item).textinput(); */
 			$("#num_preguntas").html(parseInt(num_actual) + 1);
 		}else if (rta == "FECHA" && id_item_last != id_item) {
 			$("#items").append('<div id="f'+id_item+'" class="form-group '+obligatorio+'"><label name="l'+id_item+'" id="l'+id_item+'" class="control-label" >'+descripcion_item+':&nbsp;<label name="lr'+id_item+'" id="lr'+id_item+'"></label></label><input type="text" class="form-control" tipo="fecha"  name="'+id_item+'" id="'+id_item+'" value="" '+obligatorio+' onkeypress="if ((event.keyCode < 48 || event.keyCode > 57)) event.returnValue = false;" visible="true"/></div>');
@@ -680,19 +728,13 @@ function ConsultaItemsCarga(tx, results) {
 			        if (localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("lectura") >= 0){
 						min = localStorage.lc_min;		//console.log(min);
 						max = localStorage.lc_max;
+						//si NO es Lectura Valida, porque la lectura se valida al guardar
+						if (inID != 136) validaLectura(min,max,inID);
 			        }else{
 						min = numeral(valDefecto).value() * (porceVarianza/100);		//console.log(min);
 						max = numeral(valDefecto).value() * (1+(porceVarianza/100));	//console.log(max);
+						validaLectura(min,max,inID);
 			        }
-
-					var dig = numeral(digitado[0]).value();
-					if(dig < min || dig > max){	
-				        if (localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("lectura") >= 0){
-				        	msj_peligro(inLabel+"</br>El valor '"+digitado[0]+"' NO se encuentra en el rango esperado: 	"+ (Math.round(min * 1000) / 1000) + " - " + (Math.round(max * 1000) / 1000),10)
-				        }else{
-				        	msj_peligro(inLabel+"</br>El valor '"+digitado[0]+"' NO se encuentra en el rango esperado: 	"+ (Math.round(min * 1000) / 1000) + " - " + (Math.round(max * 1000) / 1000),10);
-				        }
-					}
 				}else if (vaTipo =="select"){
 /*					var txtSelect = $("#"+inID+" option:selected").text();
 					if(valDefecto.toUpperCase() != txtSelect.toUpperCase()){	console.log(valDefecto);
@@ -732,7 +774,7 @@ function activaTab(tab){
         $('.nav-tabs a[href="#' + tab + '"]').tab('show');
     };
 
-function comprobarCamposRequired(){
+function comprobarCamposRequired(){		//console.log($("#21").is(':visible'));
 	var correcto=true;
 	if (myLatitud===undefined || myLatitud=="undefined"){myLatitud="";}
 	if (myLongitud===undefined || myLongitud=="undefined"){myLongitud="";}
@@ -743,7 +785,7 @@ function comprobarCamposRequired(){
 			msj_peligro("Debe ingresar una geometría tipo "+ localStorage.tipo_geometria);
 			activaTab('tab4_geom');
 	}
-	
+
 	if(correcto==true){
 		var idLastchecked;
 		var checked;
@@ -779,6 +821,22 @@ function comprobarCamposRequired(){
 				}
 			}
 	   });
+	}
+	//Valida si la lectura fue Confirmada
+	if(correcto == true){
+		if(localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("lectura") >= 0) { 
+			var resLectura = validaLectura(localStorage.lc_min,localStorage.lc_max,136);	console.log(resLectura);
+			//136 es el ID de lectura de EAAB
+			if(resLectura != "ok"){
+				if($("#21").is(':visible')){
+					if($("#21").val() != $("#136").val() && $("#21").val() != ""){
+						msj_peligro("La lectura no coincide");
+						correcto = false;
+						$("#21").focus();
+					}
+				}
+			}
+		}
 	}
 	
 	if(localStorage.geolocaliza_obligatorio == "S" && (myLatitud=="" || myLongitud=="") && correcto==true){

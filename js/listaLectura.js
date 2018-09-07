@@ -110,9 +110,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 			    localStorage.lc_dir = direccion;
 				setTimeout(function(){ window.location = "formulario.html"; }, 70);
 			}
-		}
-		
-		console.log(num_medidor)
+		} //console.log(num_medidor)
 
 		$("#items").append('<div class="notice notice-'+estilo+'" id="'+idUsuario+'">'+htmlTitulo+
 				 		'<small>Dirección:&nbsp;<label>'+direccion+'</label></small><br>'+
@@ -234,17 +232,16 @@ $(document).ready(function(){
 	$('#InputBuscar').on('keyup', function() {
 		var valor=this.value;
 		 delay(function(){
-	      if (valor.length > 3) {
+	      	if (valor.length > 3) {
 	      	    $("#items").html('');
 				sessionStorage.setItem("InputBuscar", valor);
 		     	db.transaction(ConsultaItems);
-		     }else{
+		    }else{
 		     	sessionStorage.removeItem("InputBuscar");
 		     	db.transaction(ConsultaItems);
-		     }
+		    }
 		    // console.log("ole papa");
-    }, 500 );
-	     
+    	}, 500 );
 	});
 	$('#SlctFilterOK').change(function() {
   		//sessionStorage.setItem("InputBuscar", $('#InputBuscar').val());
