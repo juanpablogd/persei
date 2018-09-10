@@ -33,12 +33,35 @@ var eaab_pagar={
 				var where=' ';
 				var where='where r.id_envio != "" ';
 
-				sql = 'select distinct num_medidor,ctacto,direccion,nombre,telefono,uso,min,max,r.id_envio,l.respuesta  AS lectura '+
-					'from '+results.rows.item(j).esquema+'usuarios_ruta e '+
+				sql = 'CREATE table lectura_data_pdf AS  WITH lect AS ( select e.*, CAST(e.lectura_actual  AS REAL) AS  lectura_anterior,CAST(l.respuesta AS REAL)  AS lectura_ultima,  '+
+					' (CAST(l.respuesta AS REAL)-CAST(e.lectura_actual AS REAL)) AS consumo,r.id_envio '+
+			        ' from '+results.rows.item(j).esquema+'usuarios_ruta e '+
 					'left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "23") '+
 					'left join '+results.rows.item(j).esquema+'t_rtas_formulario l on (r.id_envio = l.id_envio and l.id_item =  "136") '+
 					where+
-					'order by r.id_envio,CAST(order_lectura as integer)';
+					' ) '+
+					' select num_medidor,ctacto,direccion,nombre,telefono,uso,min,max,id_envio, lectura_ultima,lectura_anterior, consumo, '+
+					' CAST(cargo_fijo_acue AS REAL)  AS acue_cargo_fijo, '+
+					' CAST(cons_basico_acue AS REAL)  AS acue_cons_basico, '+
+					' CAST(cons_no_basico_acue AS REAL) AS acue_cons_nobasico, '+
+					' CAST(cargo_fijo_alc AS REAL) AS alc_cargo_fijo, '+
+					' CAST(cons_basico_alc AS REAL)  AS alc_cons_basico, '+
+					' CAST(cons_no_basico_alc AS REAL) AS alc_cons_nobasico, '+
+					' CAST(cargo_fijo_acue AS REAL)  AS acue_cargo_fijo_tl, '+
+					' CASE WHEN consumo>22 THEN (22*CAST(cons_basico_acue AS REAL)) ELSE  (consumo*CAST(cons_basico_acue AS REAL)) END  AS acue_cons_basico_ttl, '+
+					' CASE WHEN consumo>22 THEN ((consumo-22)*CAST(cons_no_basico_acue AS REAL)) ELSE 0 END  AS acue_cons_nobasico_ttl, '+
+					' CAST(cargo_fijo_alc AS REAL)  AS alc_cargo_fijo_tl, '+
+					' CASE WHEN consumo>22 THEN (22*CAST(cons_basico_alc AS REAL)) ELSE  (consumo*CAST(cons_basico_alc AS REAL)) END  AS alc_cons_basico_ttl, '+
+					' CASE WHEN consumo>22 THEN ((consumo-22)*CAST(cons_no_basico_alc AS REAL)) ELSE 0 END  AS alc_cons_nobasico_ttl, '+
+					' CAST(cargo_fijo_acue AS REAL)*(1+CAST(subs_fijo_acue AS REAL))  AS acue_cargo_fijo_tl_sub, '+
+					' CASE WHEN consumo>22 THEN (22*CAST(cons_basico_acue AS REAL))*(1+CAST(subs_no_basico_acue AS REAL)) ELSE  (consumo*CAST(cons_basico_acue AS REAL))*(1+CAST(subs_no_basico_acue AS REAL)) END  AS acue_cons_basico_ttl_sub, '+
+					' CAST(cargo_fijo_alc AS REAL)*(1+CAST(subs_fijo_alc AS REAL))  AS alc_cargo_fijo_tl_sub, '+
+					' CASE WHEN consumo>22 THEN (22*CAST(cons_basico_alc AS REAL))*(1+CAST(subs_no_basico_alc AS REAL)) ELSE  (consumo*CAST(cons_basico_alc AS REAL))*(1+CAST(subs_no_basico_alc AS REAL)) END  AS alc_cons_basico_ttl_sub, '+
+					' CAST(subs_fijo_acue AS REAL) AS subs_fijo_acue, '+
+					' CAST(subs_no_basico_acue AS REAL) AS subs_no_basico_acue, '+
+					' CAST(subs_fijo_alc AS REAL) AS subs_fijo_alc, '+
+					' CAST(subs_no_basico_alc AS REAL) AS subs_no_basico_alc '+
+					' from lect; ';
 				tx.executeSql(sql, [], eaab_pagar.ConsultaItemsCargaAsignResp,eaab_pagar.errorCB);
 		   	}
 		}
