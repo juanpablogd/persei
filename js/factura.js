@@ -1,5 +1,142 @@
-function crearFactura(numMedidor,lectura) { console.log(numMedidor + " - " +  lectura);
-	var doc = new jsPDF('p','mm','a6');
+function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+      var blob = new Blob(byteArrays, {type: contentType});
+      return blob;
+}
+
+/**
+ * Create a PDF file according to its database64 content only.
+ * https://ourcodeworld.com/articles/read/230/how-to-save-a-pdf-from-a-base64-string-on-the-device-with-cordova
+ * @param folderpath {String} The folder where the file will be created
+ * @param filename {String} The name of the file that will be created
+ * @param content {Base64 String} Important : The content can't contain the following string (data:application/pdf;base64). Only the base64 string is expected.
+ */
+function savebase64AsPDF(folderpath,filename,content,contentType){
+    // Convert the base64 string in a Blob
+    var DataBlob = b64toBlob(content,contentType);
+    
+    console.log("Starting to write the file :3");
+    
+    window.resolveLocalFileSystemURL(folderpath, function(dir) {
+        console.log("Access to the directory granted succesfully");
+		dir.getFile(filename, {create:true}, function(file) {
+            console.log("File created succesfully.");
+            file.createWriter(function(fileWriter) {
+                console.log("Writing content to file");
+                fileWriter.write(DataBlob); console.log(folderpath+filename);
+                //document.location.href=folderpath+filename;
+					function onShow(){
+					  window.console.log('document shown');
+					  //e.g. track document usage
+					}
+					function onClose(){
+					  window.console.log('document closed');
+					  //e.g. remove temp files
+					}
+					function onMissingApp(appId, installer)
+					{
+					    if(confirm("Do you want to install the free PDF Viewer App "
+					            + appId + " for Android?"))
+					    {
+					        installer();
+					    }
+					} 
+
+					function onError(error){
+					  window.console.log(error);
+					  alert("Sorry! Cannot view document.");
+					}
+					var options = {
+						"title": "STRING",
+						"documentView" : {
+							"closeLabel" : "STRING"
+						},
+						"navigationView" : {
+							"closeLabel" : "STRING"
+						},
+						"email" : {
+							"enabled" : "BOOLEAN"
+						},
+						"print" : {
+							"enabled" : "BOOLEAN"
+						},
+						"openWith" : {
+							"enabled" : "BOOLEAN"
+						},
+						"bookmarks" : {
+							"enabled" : "BOOLEAN"
+						},
+						"search" : {
+							"enabled" : "BOOLEAN"
+						},
+						"autoClose": {
+							"onPause" : "BOOLEAN"
+						}
+					}
+					var linkHandlers = [
+					            {
+					                "pattern": "STRING", // string representation of a plain regexp (no flags)
+					                "close": "BOOLEAN", // shall the document be closed, after the link handler was executed?
+					                handler: function (link) {} // link handler to be executed when the user clicks on a link matching the pattern
+					            },
+					            {
+					                "pattern": '^\/',
+					                "close": false,
+					                handler: function (link) {
+					                    window.console.log('link clicked: ' + link);
+					                }
+					            }
+					    ];
+                cordova.plugins.SitewaertsDocumentViewer.viewDocument(folderpath+filename, 'application/pdf', options, onShow, onClose, onMissingApp, onError, linkHandlers);
+/*                window.openFileNative.open(folderpath+filename);
+				cordova.plugins.fileOpener2.showOpenWithDialog(
+				    folderpath+filename, // You can also use a Cordova-style file uri: cdvfile://localhost/persistent/Download/starwars.pdf
+				    'application/pdf', 
+				    { 
+				        error : function(e) { 
+				            console.log('Error status: ' + e.status + ' - Error message: ' + e.message);
+				        },
+				        success : function () {
+				            console.log('file opened successfully'); 				
+				        }
+				    }
+				); */
+
+            }, function(){
+                console.log('Unable to save file in path '+ folderpath);
+            });
+		});
+    });
+}
+
+function Consulta(tx) {
+	$("#estado_info").html("");
+	tx.executeSql('SELECT esquema FROM p_verticales', [], ConsultaCarga);
+}
+function ConsultaCarga(tx, results) {
+	var len = results.rows.length;		
+	for (i = 0; i < len; i++){
+		var esquema = results.rows.item(i).esquema;
+   };
+var doc = new jsPDF('p','mm','a6');
 	
 	var imgData = 'data:image/png;base64,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';
 	
@@ -26,12 +163,12 @@ function crearFactura(numMedidor,lectura) { console.log(numMedidor + " - " +  le
 	var cRuta = 'G33250';
 	//Variables datos del medidor
 	var mMarca = 'IBERCONTA';
-	var mNumero = '01015IBO22929';
+	var mNumero = localStorage.numMedidorPDF;
 	var mTipo = 'VELO015C';
 	var mDiamet = '1/2"';
 	
 	//Variables datos de Lectura
-	var lUltima = '883';
+	var lUltima = localStorage.lecturaPDF;
 	var lAnterior = '873';
 	var lConsumo = '33';
 	//periodo de lectura
@@ -482,6 +619,35 @@ function crearFactura(numMedidor,lectura) { console.log(numMedidor + " - " +  le
 	doc.addImage(imgAseo, 'PNG', 10, 136, 80, 5);
 	doc.text(24, 144, numeroFacAseo);
 	
-	//guardar
-	doc.save('factura.pdf');
+	if (typeof cordova !== 'undefined'){	//guardar
+		var contentType = "application/pdf";
+		var folderpath = cordova.file.externalDataDirectory;
+		var filename = "factura.pdf";
+
+		var uristring = doc.output('datauristring');
+		var myBase64 = "";
+		var n=uristring.split("base64,");			//console.log(n[0]);	console.log(n[1]);	console.log(n[2]);
+    	myBase64 = n[1];
+		
+		savebase64AsPDF(folderpath,filename,myBase64,contentType);
+
+	}else{	//console.log(doc.output('datauristring'));
+/*		var uristring = doc.output('datauristring');
+		var myBase64 = "";
+		var n=uristring.split("base64,");			//console.log(n[0]);	console.log(n[1]);	console.log(n[2]);
+    	myBase64 = n[1];
+		console.log(myBase64);*/
+	    doc.save('factura.pdf');
+	}
+
+
 }
+
+
+function crearFactura(numMedidor,lectura) {		//console.log(numMedidor + " - " +  lectura);
+	localStorage.numMedidorPDF	= numMedidor;
+	localStorage.lecturaPDF	= lectura;
+	db.transaction(Consulta);
+}
+
+

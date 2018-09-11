@@ -48,8 +48,7 @@ function ConsultaItemsCarga(tx, results) {
 			}else if($("#SlctFilterOK").val()==3){
 				var where='where 1=1 ';
 			}
-
-			
+		
 			if(InputBuscar=== null){
 				console.log("no existe");
 			}else{
@@ -57,19 +56,24 @@ function ConsultaItemsCarga(tx, results) {
 				//console.log(InputBuscar);
 				//console.log("existe");
 			}
+
 			if (localStorage.nombre_form.toLowerCase().indexOf("eaab") >= 0){
-				sql = 'select distinct num_medidor,ctacto,direccion,nombre,telefono,uso,min,max,r.id_envio '+
-					' from '+results.rows.item(j).esquema+'usuarios_ruta e '+
-					'	left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "23") '+
-					where+
-					'order by r.id_envio,CAST(order_lectura as integer)';
+				sql = 'WITH lect AS ( SELECT distinct r.id_envio,id_item,respuesta lectura FROM '+results.rows.item(j).esquema+'t_rtas_formulario r where (r.id_item = "136") ) '+
+					'select distinct num_medidor,ctacto,direccion,nombre,telefono,uso,min,max,r.id_envio,lectura '+
+						' from '+results.rows.item(j).esquema+'usuarios_ruta e '+
+						'	left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "23") '+
+						'   left join lect on lect.id_envio = r.id_envio ' +
+						where+
+						'order by r.id_envio,CAST(order_lectura as integer)';
 			} else {
-				sql = 'select distinct num_medidor,ctacto,direccion,nombre1,nombre2,apellido1,apellido2,telefono,uso,min,max,r.id_envio '+
+				sql = 'WITH lect AS ( SELECT distinct r.id_envio,id_item,respuesta lectura FROM '+results.rows.item(j).esquema+'t_rtas_formulario r where (r.id_item = "136") ) '+
+					'select distinct num_medidor,ctacto,direccion,nombre1,nombre2,apellido1,apellido2,telefono,uso,min,max,r.id_envio,lectura '+
 					' from '+results.rows.item(j).esquema+'usuario_estadisticas e '+
 					'	left join '+results.rows.item(j).esquema+'t_rtas_formulario r on (e.num_medidor = r.respuesta and r.id_item =  "23") '+
+					'   left join lect on lect.id_envio = r.id_envio ' +
 					where+
 					'order by r.id_envio,CAST(order_lectura as integer)';
-			} console.log(sql);
+			}	console.log(sql);
 			tx.executeSql(sql, [], ConsultaItemsCargaAsignResp,errorCB);
 	   	}
 	}
@@ -77,6 +81,7 @@ function ConsultaItemsCarga(tx, results) {
 function ConsultaItemsCargaAsignResp(tx, resultsV) {
 	var lon = resultsV.rows.length;	console.log(lon);
 	if(lon > 0) $("#items").html('');
+	var s = "";
 	for (i = 0; i < lon; i++){
 		var num_medidor = resultsV.rows.item(i).num_medidor;	//console.log(num_medidor);
 		var id_enviOld = resultsV.rows.item(i).id_envio;
@@ -89,6 +94,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 		var min = resultsV.rows.item(i).min;
 		var max = resultsV.rows.item(i).max;
 		var uso = resultsV.rows.item(i).uso;
+		var vrLectura = resultsV.rows.item(i).lectura;
 	
 		var htmlTitulo="";
 		var htmlPrint="";
@@ -100,7 +106,7 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 			htmlPrint = '<i id="p'+num_medidor+'" datos="" class="fa fa-print pull-right" style="font-size:32px"></i>'
 			estilo="success";
 			idUsuario="";
-			add='Existe Usuario:&nbsp;<label id="eu_'+num_medidor+'"></label><br>lectura:&nbsp;<label id="le_'+num_medidor+'"></label>';
+			add='lectura:&nbsp;<label id="le_'+num_medidor+'">'+vrLectura+'</label>';
 		}else{ //SI ES AUTOMATICO INGRESA DE UNA
 			if(localStorage.siguiente == "SI"){	//console.log("PUM!!!");
 				localStorage.siguiente = "";
@@ -112,49 +118,16 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 			}
 		} //console.log(num_medidor)
 
-		$("#items").append('<div class="notice notice-'+estilo+'" id="'+idUsuario+'">'+htmlTitulo+
+		s +='<div class="notice notice-'+estilo+'" id="'+idUsuario+'">'+htmlTitulo+
 				 		'<small>Dirección:&nbsp;<label>'+direccion+'</label></small><br>'+
 				 		'<small>Medidor:<label> '+num_medidor+'</label></small><br>'+
 			    		'<small>Uso:&nbsp;<label>'+uso+'</label></small><br>'+
 						add+
 						htmlPrint+
-			'</div>'
-		);
-		if(id_enviOld!=null){
-			var sql18 = 'SELECT distinct "'+num_medidor+'" as num_medidor,id_item,respuesta FROM '+
-					' lecturat_rtas_formulario r'+
-					' where (r.id_item = "136" or r.id_item = "35") and r.id_envio = "'+id_enviOld+'"';	console.log(sql18);
-			tx.executeSql(sql18, [], 
-			(function(esquema){
-			   return function(tx,resulta2){
-			   		var lar = resulta2.rows.length;	console.log(lar);
-			   		for (l = 0; l < lar; l++){
-			   			var num_medidor = resulta2.rows.item(l).num_medidor;
-			   			var id_item = resulta2.rows.item(l).id_item;	//console.log(idsig_tubo);
-			   			var respuesta = resulta2.rows.item(l).respuesta;
-
-			   			if(id_item == "136"){
-				   			$("#le_"+num_medidor).html(respuesta);
-			   			}else if(id_item == "35"){
-			   				$("#eu_"+num_medidor).html(respuesta);
-			   			}
-			   		}
-			   };
-			})(esquema),null);
-		}
-
-		$('div[id*="'+num_medidor+'"]').click(function(e){
-			var mId = $(this).attr('id');	//console.log(mId);
-		    var n=mId.split("|");			//console.log(n[0]);	console.log(n[1]);	console.log(n[2]);
-		    localStorage.lc_med = n[0];
-		    localStorage.lc_min = n[1];
-		    localStorage.lc_max = n[2];
-		    localStorage.lc_dir = n[3];
-
-		    setTimeout(function(){ window.location = "formulario.html"; }, 70);
-		});
-
-		$('i[id^='+id_enviOld+']').click(function(e){
+			'</div>';
+   	}
+   	$.when( $("#items").append(s) ).done(function() {
+		$('.fa-close').click(function(e){
 			var mId = $(this).attr('id');	console.log(mId);
 		    var n=mId.split("|");			//console.log(n[0]);	console.log(n[1]);	console.log(n[2]);
 		        bootbox.hideAll();
@@ -184,10 +157,10 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 				});
 		});	//console.log(id_enviOld);
 		if(id_enviOld!=null){
-			$('#p'+num_medidor+'').click(function(e){
-				var mId = $(this).attr('id');	//console.log(mId);
+			$('.fa-print').click(function(e){
+				var mId = $(this).attr('id');	console.log(mId);
 			    var n=mId.split("p");			//console.log(n[0]);	console.log(n[1]);	console.log(n[2]);
-			    var vrLectura = $('#le_'+n[1]+'').val();	console.log(vrLectura);
+			    var vrLectura = $('#le_'+n[1]+'').val();	//console.log(vrLectura);
 
 			    //setTimeout(function(){ window.location = "imprimeLectura.html"; }, 70);
 				bootbox.hideAll();
@@ -214,9 +187,24 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 
 			});
 		}
+		$('#items div:not(.fa-print, .fa-close)').click(function(e){
+			var mId = $(this).attr('id');	//console.log(mId);
+			if(mId != ""){
+			    var n=mId.split("|");			//console.log(n[0]);	console.log(n[1]);	console.log(n[2]);
+			    localStorage.lc_med = n[0];
+			    localStorage.lc_min = n[1];
+			    localStorage.lc_max = n[2];
+			    localStorage.lc_dir = n[3];
+			   	setTimeout(function(){ window.location = "formulario.html"; }, 70);
+			}
+		});
 
-		$("#refNotificacion").hide();	
-   	}
+		$("#refNotificacion").hide();
+
+  	});
+   	
+
+	
 }
 var delay = (function(){
   var timer = 0;

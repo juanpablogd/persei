@@ -531,6 +531,7 @@ function validaLectura(min,max,id){	//alet("validaLectura");
 		}
 	}
 	return estado;
+	
 }
 /****************************************************************************************************************************************************************/
 function errorCB(err) {
@@ -786,6 +787,40 @@ function comprobarCamposRequired(){		//console.log($("#21").is(':visible'));
 			activaTab('tab4_geom');
 	}
 
+	//Valida si la lectura fue Confirmada
+	if(correcto == true){
+		if(localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("lectura") >= 0) { 
+			var resLectura = validaLectura(localStorage.lc_min,localStorage.lc_max,136);	console.log(resLectura);
+			var vrlectura = $("#136").val();												console.log(vrlectura);
+			var vrlecturaConfirmar = $("#21").val();										console.log(vrlecturaConfirmar);
+			if(vrlectura == '' || vrlectura === ''){
+					correcto=false;
+					msj_peligro("Debe diligenciar correctamente la Lectura.");
+					activaTab('tab1_form');
+					$("#136").focus();
+					return false;
+			}else if(vrlecturaConfirmar == '' || vrlecturaConfirmar === ''){
+				if($("#21").is(':visible')){
+					correcto=false;
+					msj_peligro("Debe confirmar la Lectura.");
+					activaTab('tab1_form');
+					$("#136").focus();
+					return false;
+				}
+			}else{		//136 es el ID de lectura de EAAB
+				if(resLectura != "ok"){		//console.log($("#21").val() + " " + );
+					if($("#21").is(':visible')){
+						if(vrlecturaConfirmar != vrlectura){
+							msj_peligro("La lectura no coincide");
+							correcto = false;
+							$("#21").focus();
+						}
+					}
+				}
+			}
+		}
+	}
+
 	if(correcto==true){
 		var idLastchecked;
 		var checked;
@@ -823,22 +858,6 @@ function comprobarCamposRequired(){		//console.log($("#21").is(':visible'));
 				}
 			}
 	   });
-	}
-	//Valida si la lectura fue Confirmada
-	if(correcto == true){
-		if(localStorage.esquema == "lectura" && localStorage.nombre_form.toLowerCase().indexOf("lectura") >= 0) { 
-			var resLectura = validaLectura(localStorage.lc_min,localStorage.lc_max,136);	console.log(resLectura);
-			//136 es el ID de lectura de EAAB
-			if(resLectura != "ok"){
-				if($("#21").is(':visible')){
-					if($("#21").val() != $("#136").val() && $("#21").val() != ""){
-						msj_peligro("La lectura no coincide");
-						correcto = false;
-						$("#21").focus();
-					}
-				}
-			}
-		}
 	}
 	
 	if(localStorage.geolocaliza_obligatorio == "S" && (myLatitud=="" || myLongitud=="") && correcto==true){
