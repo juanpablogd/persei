@@ -47,15 +47,15 @@ var eaab_pagar={
 					' ) '+
 					' select num_medidor,ctacto,direccion,nombre,telefono,uso,min,max,id_envio, lectura_ultima,lectura_anterior, consumo, '+
 					' CAST(cargo_fijo_acue AS REAL)  AS acue_cargo_fijo, '+
-					' CAST(cargo_fijo_acue AS REAL)  AS acue_cargo_fijo_ttl, '+
-					' CAST(cargo_fijo_acue AS REAL)*(CAST(subs_fijo_acue AS REAL))  AS acue_cargo_fijo_ttl_sub, '+
-					' CAST(cargo_fijo_acue AS REAL)*(1+CAST(subs_fijo_acue AS REAL))  AS acue_cargo_fijo_ttl_unisub, '+
-					' CAST(cargo_fijo_acue AS REAL)*(1+CAST(subs_fijo_acue AS REAL))  AS acue_cargo_fijo_ttl_fin, '+
+					' ROUND(CAST(cargo_fijo_acue AS REAL))  AS acue_cargo_fijo_ttl, '+
+					' ROUND(CAST(cargo_fijo_acue AS REAL))*(CAST(subs_fijo_acue AS REAL))  AS acue_cargo_fijo_ttl_sub, '+
+					' ROUND(CAST(cargo_fijo_acue AS REAL))*(1+CAST(subs_fijo_acue AS REAL))  AS acue_cargo_fijo_ttl_unisub, '+
+					' ROUND(CAST(cargo_fijo_acue AS REAL)*(1+CAST(subs_fijo_acue AS REAL)))  AS acue_cargo_fijo_ttl_fin, '+
 					' CAST(cons_basico_acue AS REAL)  AS acue_cons_basico, '+
-					' CASE WHEN consumo>22 THEN (22*CAST(cons_basico_acue AS REAL)) ELSE  (consumo*CAST(cons_basico_acue AS REAL)) END  AS acue_cons_basico_ttl, '+
-					' CAST(cons_basico_acue AS REAL)*(CAST(subs_no_basico_acue AS REAL))   AS acue_cons_basico_ttl_sub, '+
+					' CASE WHEN consumo>22 THEN ROUND((22*CAST(cons_basico_acue AS REAL))) ELSE  ROUND((consumo*CAST(cons_basico_acue AS REAL))) END  AS acue_cons_basico_ttl, '+
+					' CASE WHEN consumo>22 THEN ROUND((22*CAST(cons_basico_acue AS REAL)))*(CAST(subs_no_basico_acue AS REAL)) ELSE  ROUND((consumo*CAST(cons_basico_acue AS REAL)))*(CAST(subs_no_basico_acue AS REAL)) END  AS acue_cons_basico_ttl_sub, '+
 					' CAST(cons_basico_acue AS REAL)*(1+CAST(subs_no_basico_acue AS REAL))   AS acue_cons_basico_ttl_unisub, '+
-					' CASE WHEN consumo>22 THEN (22*CAST(cons_basico_acue AS REAL))*(1+CAST(subs_no_basico_acue AS REAL)) ELSE  (consumo*CAST(cons_basico_acue AS REAL))*(1+CAST(subs_no_basico_acue AS REAL)) END  AS acue_cons_basico_ttl_fin, '+
+					' CASE WHEN consumo>22 THEN ROUND((22*CAST(cons_basico_acue AS REAL))*(1+CAST(subs_no_basico_acue AS REAL))) ELSE  ROUND((consumo*CAST(cons_basico_acue AS REAL))*(1+CAST(subs_no_basico_acue AS REAL))) END  AS acue_cons_basico_ttl_fin, '+
 					' CAST(cons_no_basico_acue AS REAL) AS acue_cons_nobasico, '+					
 					' CASE WHEN consumo>22 THEN ((consumo-22)*CAST(cons_no_basico_acue AS REAL)) ELSE 0 END  AS acue_cons_nobasico_ttl, '+
 					' CAST(cargo_fijo_alc AS REAL) AS alc_cargo_fijo, '+
