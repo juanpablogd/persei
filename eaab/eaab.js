@@ -107,6 +107,6 @@ var eaab_pagar={
    		eaab_pagar.db.transaction(eaab_pagar.ConsultaItems);
    	}
 }
-eaab_pagar.num_medidor='08015IB111936';
+eaab_pagar.num_medidor='08015IB124156';
 eaab_pagar.main();		
 eaab_pagar.resultado;
