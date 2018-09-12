@@ -42,72 +42,8 @@ function savebase64AsPDF(folderpath,filename,content,contentType){
             file.createWriter(function(fileWriter) {
                 console.log("Writing content to file");
                 fileWriter.write(DataBlob); console.log(folderpath+filename);
-                //document.location.href=folderpath+filename;
-					function onShow(){
-					  window.console.log('document shown');
-					  //e.g. track document usage
-					}
-					function onClose(){
-					  window.console.log('document closed');
-					  //e.g. remove temp files
-					}
-					function onMissingApp(appId, installer)
-					{
-					    if(confirm("Do you want to install the free PDF Viewer App "
-					            + appId + " for Android?"))
-					    {
-					        installer();
-					    }
-					} 
 
-					function onError(error){
-					  window.console.log(error);
-					  alert("Sorry! Cannot view document.");
-					}
-					var options = {
-						"title": "STRING",
-						"documentView" : {
-							"closeLabel" : "STRING"
-						},
-						"navigationView" : {
-							"closeLabel" : "STRING"
-						},
-						"email" : {
-							"enabled" : "BOOLEAN"
-						},
-						"print" : {
-							"enabled" : "BOOLEAN"
-						},
-						"openWith" : {
-							"enabled" : "BOOLEAN"
-						},
-						"bookmarks" : {
-							"enabled" : "BOOLEAN"
-						},
-						"search" : {
-							"enabled" : "BOOLEAN"
-						},
-						"autoClose": {
-							"onPause" : "BOOLEAN"
-						}
-					}
-					var linkHandlers = [
-					            {
-					                "pattern": "STRING", // string representation of a plain regexp (no flags)
-					                "close": "BOOLEAN", // shall the document be closed, after the link handler was executed?
-					                handler: function (link) {} // link handler to be executed when the user clicks on a link matching the pattern
-					            },
-					            {
-					                "pattern": '^\/',
-					                "close": false,
-					                handler: function (link) {
-					                    window.console.log('link clicked: ' + link);
-					                }
-					            }
-					    ];
-                cordova.plugins.SitewaertsDocumentViewer.viewDocument(folderpath+filename, 'application/pdf', options, onShow, onClose, onMissingApp, onError, linkHandlers);
-/*                window.openFileNative.open(folderpath+filename);
-				cordova.plugins.fileOpener2.showOpenWithDialog(
+				cordova.plugins.fileOpener2.open(
 				    folderpath+filename, // You can also use a Cordova-style file uri: cdvfile://localhost/persistent/Download/starwars.pdf
 				    'application/pdf', 
 				    { 
@@ -118,7 +54,7 @@ function savebase64AsPDF(folderpath,filename,content,contentType){
 				            console.log('file opened successfully'); 				
 				        }
 				    }
-				); */
+				);
 
             }, function(){
                 console.log('Unable to save file in path '+ folderpath);
