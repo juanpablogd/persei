@@ -99,36 +99,35 @@ var eaab_pagar={
 					where+
 					' ) '+
 					' select num_medidor,ctacto,direccion,nombre,telefono,uso,min,max,id_envio, lectura_ultima,lectura_anterior, consumo, '+
-					' CAST(cargo_fijo_acue AS REAL)  AS acue_cargo_fijo1, '+
-					' ROUND(CAST(cargo_fijo_acue AS REAL))  AS acue_cargo_fijo2, '+
-					' ROUND(CAST(cargo_fijo_acue AS REAL))*(CAST(subs_fijo_acue AS REAL))  AS acue_cargo_fijo3, '+
-					' ROUND(CAST(cargo_fijo_acue AS REAL))*(1+CAST(subs_fijo_acue AS REAL))  AS acue_cargo_fijo4, '+
-					' ROUND(CAST(cargo_fijo_acue AS REAL)*(1+CAST(subs_fijo_acue AS REAL)))  AS acue_cargo_fijo5, '+
-					' CAST(cons_basico_acue AS REAL)  AS acue_cons_basico1, '+
+					' ROUND(CAST(cargo_fijo_acue AS REAL),2)  AS acue_cargo_fijo1, '+
+					' ROUND(CAST(cargo_fijo_acue AS REAL),0)  AS acue_cargo_fijo2, '+
+					' ROUND(ROUND(CAST(cargo_fijo_acue AS REAL))*(CAST(subs_fijo_acue AS REAL)),2)  AS acue_cargo_fijo3, '+
+					' ROUND(ROUND(CAST(cargo_fijo_acue AS REAL))*(1+CAST(subs_fijo_acue AS REAL)),2)  AS acue_cargo_fijo4, '+
+					' ROUND(ROUND(CAST(cargo_fijo_acue AS REAL)*(1+CAST(subs_fijo_acue AS REAL))),0)  AS acue_cargo_fijo5, '+
+					' ROUND(CAST(cons_basico_acue AS REAL),2)  AS acue_cons_basico1, '+
 					' CASE WHEN consumo>22 THEN ROUND((22*CAST(cons_basico_acue AS REAL))) ELSE  ROUND((consumo*CAST(cons_basico_acue AS REAL))) END  AS acue_cons_basico2, '+
-					' CASE WHEN consumo>22 THEN ROUND((22*CAST(cons_basico_acue AS REAL)))*(CAST(subs_no_basico_acue AS REAL)) ELSE  ROUND((consumo*CAST(cons_basico_acue AS REAL)))*(CAST(subs_no_basico_acue AS REAL)) END  AS acue_cons_basico3, '+
-					' CAST(cons_basico_acue AS REAL)*(1+CAST(subs_no_basico_acue AS REAL))   AS acue_cons_basico4, '+
-					' CASE WHEN consumo>22 THEN ROUND((22*CAST(cons_basico_acue AS REAL))*(1+CAST(subs_no_basico_acue AS REAL))) ELSE  ROUND((consumo*CAST(cons_basico_acue AS REAL))*(1+CAST(subs_no_basico_acue AS REAL))) END  AS acue_cons_basico5, '+
-					' CAST(cons_no_basico_acue AS REAL) AS acue_cons_nobasico1, '+					
-					' CASE WHEN consumo>22 THEN ROUND(((consumo-22)*CAST(cons_no_basico_acue AS REAL))) ELSE 0 END  AS acue_cons_nobasico2, '+
+					' CASE WHEN consumo>22 THEN ROUND(ROUND((22*CAST(cons_basico_acue AS REAL)))*(CAST(subs_no_basico_acue AS REAL)),2) ELSE  ROUND(ROUND((consumo*CAST(cons_basico_acue AS REAL)))*(CAST(subs_no_basico_acue AS REAL)),2) END  AS acue_cons_basico3, '+
+					' ROUND(CAST(cons_basico_acue AS REAL)*(1+CAST(subs_no_basico_acue AS REAL)),2)   AS acue_cons_basico4, '+
+					' CASE WHEN consumo>22 THEN ROUND(ROUND((22*CAST(cons_basico_acue AS REAL))*(1+CAST(subs_no_basico_acue AS REAL))),2) ELSE  ROUND(ROUND((consumo*CAST(cons_basico_acue AS REAL))*(1+CAST(subs_no_basico_acue AS REAL))),2) END  AS acue_cons_basico5, '+
+					' ROUND(CAST(cons_no_basico_acue AS REAL),2) AS acue_cons_nobasico1, '+					
+					' CASE WHEN consumo>22 THEN ROUND(ROUND(((consumo-22)*CAST(cons_no_basico_acue AS REAL))),0) ELSE 0 END  AS acue_cons_nobasico2, '+
 					' 0 AS acue_cons_nobasico3, '+					
-					' CAST(cons_no_basico_acue AS REAL) AS acue_cons_nobasico4, '+					
+					' ROUND(CAST(cons_no_basico_acue AS REAL),2) AS acue_cons_nobasico4, '+					
 					' CASE WHEN consumo>22 THEN ROUND(((consumo-22)*CAST(cons_no_basico_acue AS REAL))) ELSE 0 END  AS acue_cons_nobasico5, '+
-					
-					' CAST(cargo_fijo_alc AS REAL)  AS alc_cargo_fijo1, '+
+					' ROUND(CAST(cargo_fijo_alc AS REAL),2)  AS alc_cargo_fijo1, '+
 					' ROUND(CAST(cargo_fijo_alc AS REAL))  AS alc_cargo_fijo2, '+
-					' ROUND(CAST(cargo_fijo_alc AS REAL))*(CAST(subs_fijo_alc AS REAL))  AS alc_cargo_fijo3, '+
-					' ROUND(CAST(cargo_fijo_alc AS REAL))*(1+CAST(subs_fijo_alc AS REAL))  AS alc_cargo_fijo4, '+
+					' ROUND(ROUND(CAST(cargo_fijo_alc AS REAL))*(CAST(subs_fijo_alc AS REAL)),2)  AS alc_cargo_fijo3, '+
+					' ROUND(ROUND(CAST(cargo_fijo_alc AS REAL))*(1+CAST(subs_fijo_alc AS REAL)),2)  AS alc_cargo_fijo4, '+
 					' ROUND(CAST(cargo_fijo_alc AS REAL)*(1+CAST(subs_fijo_alc AS REAL)))  AS alc_cargo_fijo5, '+
-					' CAST(cons_basico_alc AS REAL)  AS alc_cons_basico1, '+
+					' ROUND(CAST(cons_basico_alc AS REAL),2)  AS alc_cons_basico1, '+
 					' CASE WHEN consumo>22 THEN ROUND((22*CAST(cons_basico_alc AS REAL))) ELSE  ROUND((consumo*CAST(cons_basico_alc AS REAL))) END  AS alc_cons_basico2, '+
-					' CASE WHEN consumo>22 THEN ROUND((22*CAST(cons_basico_alc AS REAL)))*(CAST(subs_no_basico_alc AS REAL)) ELSE  ROUND((consumo*CAST(cons_basico_alc AS REAL)))*(CAST(subs_no_basico_alc AS REAL)) END  AS alc_cons_basico3, '+
-					' CAST(cons_basico_alc AS REAL)*(1+CAST(subs_no_basico_alc AS REAL))   AS alc_cons_basico4, '+
+					' CASE WHEN consumo>22 THEN ROUND(ROUND((22*CAST(cons_basico_alc AS REAL)))*(CAST(subs_no_basico_alc AS REAL)),2) ELSE  ROUND(ROUND((consumo*CAST(cons_basico_alc AS REAL)))*(CAST(subs_no_basico_alc AS REAL)),2) END  AS alc_cons_basico3, '+
+					' ROUND(CAST(cons_basico_alc AS REAL)*(1+CAST(subs_no_basico_alc AS REAL)),2)   AS alc_cons_basico4, '+
 					' CASE WHEN consumo>22 THEN ROUND((22*CAST(cons_basico_alc AS REAL))*(1+CAST(subs_no_basico_alc AS REAL))) ELSE  ROUND((consumo*CAST(cons_basico_alc AS REAL))*(1+CAST(subs_no_basico_alc AS REAL))) END  AS alc_cons_basico5, '+
-					' CAST(cons_no_basico_alc AS REAL) AS alc_cons_nobasico1, '+					
+					' ROUND(CAST(cons_no_basico_alc AS REAL),2) AS alc_cons_nobasico1, '+					
 					' CASE WHEN consumo>22 THEN ROUND(((consumo-22)*CAST(cons_no_basico_alc AS REAL))) ELSE 0 END  AS alc_cons_nobasico2, '+
 					' 0 AS alc_cons_nobasico3, '+					
-					' CAST(cons_no_basico_alc AS REAL) AS alc_cons_nobasico4, '+					
+					' ROUND(CAST(cons_no_basico_alc AS REAL),2) AS alc_cons_nobasico4, '+					
 					' CASE WHEN consumo>22 THEN ROUND(((consumo-22)*CAST(cons_no_basico_alc AS REAL))) ELSE 0 END  AS alc_cons_nobasico5, '+
 					' CAST(subs_fijo_acue AS REAL) AS subs_fijo_acue, '+
 					' CAST(subs_no_basico_acue AS REAL) AS subs_no_basico_acue, '+
@@ -141,9 +140,12 @@ var eaab_pagar={
 	},
 	ConsultaItemsCargaAsignResp:function(tx, resultsV) {
 		var lon = resultsV.rows.length;	//console.log(lon);
+
 		for (i = 0; i < lon; i++){
 			var num_medidor = resultsV.rows.item(i).num_medidor;	//console.log(num_medidor);
+
 			eaab_pagar.resultado=resultsV.rows.item(i);	
+			console.log(eaab_pagar.resultado);
 			eaab_pagar.resultado.acue_subtotal1=eaab_pagar.resultado.acue_cargo_fijo2+eaab_pagar.resultado.acue_cons_basico2+eaab_pagar.resultado.acue_cons_nobasico2;
 			eaab_pagar.resultado.acue_subtotal2=eaab_pagar.resultado.acue_cargo_fijo3+eaab_pagar.resultado.acue_cons_basico3+eaab_pagar.resultado.acue_cons_nobasico3;
 			eaab_pagar.resultado.acue_subtotal3=eaab_pagar.resultado.acue_cargo_fijo5+eaab_pagar.resultado.acue_cons_basico5+eaab_pagar.resultado.acue_cons_nobasico5;
@@ -153,7 +155,8 @@ var eaab_pagar={
 			eaab_pagar.resultado.vlr_total=eaab_pagar.resultado.acue_subtotal3+eaab_pagar.resultado.alc_subtotal3;
 			eaab_pagar.resultado.vlr_dia=Math.round(eaab_pagar.resultado.vlr_total/60);
 			eaab_pagar.resultado.vlr_mes=Math.round(eaab_pagar.resultado.vlr_total/2);
-	   	}	console.log(eaab_pagar.resultado);
+	   	}	
+	   	console.log(eaab_pagar.resultado);
 	   	eaab_pagar.crearFactura();
 	},
 	crearFactura:function () {	console.log("CrearFactura");
