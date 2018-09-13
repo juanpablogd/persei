@@ -172,7 +172,8 @@ function ConsultaItemsCargaAsignResp(tx, resultsV) {
 				      label: "Si",
 				      className: "btn-success",
 				      callback: function() {
-				      		crearFactura(n[1],vrLectura);
+			      		eaab_pagar.num_medidor=n[1];
+			      		eaab_pagar.main();
 				      }
 				    },
 				    main: {
