@@ -190,9 +190,9 @@ var eaab_pagar={
 		var mDiamet = '1/2"';
 		
 		//Variables datos de Lectura
-		var lUltima = '' + eaab_pagar.resultado.lectura_ultima;
-		var lAnterior = '' + eaab_pagar.resultado.lectura_anterior;
-		var lConsumo = '' + eaab_pagar.resultado.consumo;
+		var lUltima = '' + numeral(eaab_pagar.resultado.lectura_ultima).format('0,0');
+		var lAnterior = '' + numeral(eaab_pagar.resultado.lectura_anterior).format('0,0');
+		var lConsumo = '' + numeral(eaab_pagar.resultado.consumo).format('0,0');
 		//periodo de lectura
 		var pFecInic = '6/02/2018';
 		var pFecFin = '6/04/2018';
@@ -214,39 +214,39 @@ var eaab_pagar={
 		var aCargoNoRes = '';
 		var aConsNoRes = '';
 		
-		var aCostoUnitCF = '' + eaab_pagar.resultado.acue_cargo_fijo1;
-		var aCostoUnitCB = '' + eaab_pagar.resultado.acue_cons_basico1;
-		var aCostoUnitCNB = '' + eaab_pagar.resultado.acue_cons_nobasico1;
+		var aCostoUnitCF = '' + numeral(eaab_pagar.resultado.acue_cargo_fijo1).format('$0,0.00');
+		var aCostoUnitCB = '' + numeral(eaab_pagar.resultado.acue_cons_basico1).format('$0,0.00');
+		var aCostoUnitCNB = '' + numeral(eaab_pagar.resultado.acue_cons_nobasico1).format('$0,0.00');
 		var aCostoUnitCaNR = '';
 		var aCostoUnitCoNR = '';
 		
-		var aCostoTotCF = '' + eaab_pagar.resultado.acue_cargo_fijo2;
-		var aCostoTotCB = '' + eaab_pagar.resultado.acue_cons_basico2;
-		var aCostoTotCNB = '' + eaab_pagar.resultado.acue_cons_nobasico2;
+		var aCostoTotCF = '' + numeral(eaab_pagar.resultado.acue_cargo_fijo2).format('$0,0.00');
+		var aCostoTotCB = '' + numeral(eaab_pagar.resultado.acue_cons_basico2).format('$0,0.00');
+		var aCostoTotCNB = '' + numeral(eaab_pagar.resultado.acue_cons_nobasico2).format('$0,0.00');
 		var aCostoTotCaNR = '';
 		var aCostoTotCoNR = '';
 		
-		var aSubAportCF = '' + eaab_pagar.resultado.acue_cargo_fijo3;
-		var aSubAportCB = '' + eaab_pagar.resultado.acue_cons_basico3;
-		var aSubAportCNB = '' + eaab_pagar.resultado.acue_cons_nobasico3;
+		var aSubAportCF = '' + numeral(eaab_pagar.resultado.acue_cargo_fijo3).format('$0,0.00');
+		var aSubAportCB = '' + numeral(eaab_pagar.resultado.acue_cons_basico3).format('$0,0.00');
+		var aSubAportCNB = '' + numeral(eaab_pagar.resultado.acue_cons_nobasico3).format('$0,0.00');
 		var aSubAportCaNR = '';
 		var aSubAportCoNR = '';
 		
-		var aTarifaUnitCF = '' + eaab_pagar.resultado.acue_cargo_fijo4;
-		var aTarifaUnitCB = '' + eaab_pagar.resultado.acue_cons_basico4;
-		var aTarifaUnitCNB = '' + eaab_pagar.resultado.acue_cons_nobasico4;
+		var aTarifaUnitCF = '' + numeral(eaab_pagar.resultado.acue_cargo_fijo4).format('$0,0.00');
+		var aTarifaUnitCB = '' + numeral(eaab_pagar.resultado.acue_cons_basico4).format('$0,0.00');
+		var aTarifaUnitCNB = '' + numeral(eaab_pagar.resultado.acue_cons_nobasico4).format('$0,0.00');
 		var aTarifaUnitCaNR = '';
 		var aTarifaUnitCoNR = '';
 		
-		var aValorTotCF = '' + eaab_pagar.resultado.acue_cargo_fijo5;
-		var aValorTotCB = '' + eaab_pagar.resultado.acue_cons_basico5;
-		var aValorTotCNB = '' + eaab_pagar.resultado.acue_cons_nobasico5;
+		var aValorTotCF = '' + numeral(eaab_pagar.resultado.acue_cargo_fijo5).format('$0,0.00');
+		var aValorTotCB = '' + numeral(eaab_pagar.resultado.acue_cons_basico5).format('$0,0.00');
+		var aValorTotCNB = '' + numeral(eaab_pagar.resultado.acue_cons_nobasico5).format('$0,0.00');
 		var aValorTotCaNR = '';
 		var aValorTotCoNR = '';
 		
-		var aSubTotCosto = '' + eaab_pagar.resultado.acue_subtotal1;
-		var aSubTotSubAp = '' + eaab_pagar.resultado.acue_subtotal2;
-		var aSubTotValor = '' + eaab_pagar.resultado.acue_subtotal3;
+		var aSubTotCosto = '' + numeral(eaab_pagar.resultado.acue_subtotal1).format('$0,0.00');
+		var aSubTotSubAp = '' + numeral(eaab_pagar.resultado.acue_subtotal2).format('$0,0.00');
+		var aSubTotValor = '' + numeral(eaab_pagar.resultado.acue_subtotal3).format('$0,0.00');
 		
 		//Variables de datos de Alcantarillado
 		var alCargoFij = '1';
@@ -255,39 +255,39 @@ var eaab_pagar={
 		var alCargoNoRes = '';
 		var alConsNoRes = '';
 		
-		var alCostoUnitCF = '' + eaab_pagar.resultado.alc_cargo_fijo1;
+		var alCostoUnitCF = '' + numeral(eaab_pagar.resultado.alc_cargo_fijo1).format('$0,0.00');
 		var alCostoUnitCB = '$  2.245,47';
 		var alCostoUnitCNB = '$  2.641,72';
 		var alCostoUnitCaNR = '';
 		var alCostoUnitCoNR = '';
 		
-		var alCostoTotCF = '' + eaab_pagar.resultado.alc_cargo_fijo2;
+		var alCostoTotCF = '' + numeral(eaab_pagar.resultado.alc_cargo_fijo2).format('$0,0.00');
 		var alCostoTotCB = '$ 49.400';
 		var alCostoTotCNB = '$ 29.059';
 		var alCostoTotCaNR = '';
 		var alCostoTotCoNR = '';
 		
-		var alSubAportCF = '' + eaab_pagar.resultado.alc_cargo_fijo3;
+		var alSubAportCF = '' + numeral(eaab_pagar.resultado.alc_cargo_fijo3).format('$0,0.00');
 		var alSubAportCB = '-$ 7.410,00';
 		var alSubAportCNB = '$        -';
 		var alSubAportCaNR = '';
 		var alSubAportCoNR = '';
 		
-		var alTarifaUnitCF = '' + eaab_pagar.resultado.alc_cargo_fijo4;
+		var alTarifaUnitCF = '' + numeral(eaab_pagar.resultado.alc_cargo_fijo4).format('$0,0.00');
 		var alTarifaUnitCB = '$  1.908,64';
 		var alTarifaUnitCNB = '$  2.641,73';
 		var alTarifaUnitCaNR = '';
 		var alTarifaUnitCoNR = '';
 		
-		var alValorTotCF = '' + eaab_pagar.resultado.alc_cargo_fijo5;
+		var alValorTotCF = '' + numeral(eaab_pagar.resultado.alc_cargo_fijo5).format('$0,0.00');
 		var alValorTotCB = '$ 41.990';
 		var alValorTotCNB = '$ 29.059';
 		var alValorTotCaNR = '';
 		var alValorTotCoNR = '';
 		
-		var alSubTotCosto = '' + eaab_pagar.resultado.alc_subtotal1;
-		var alSubTotSubAp = '' + eaab_pagar.resultado.alc_subtotal2;
-		var alSubTotValor = '' + eaab_pagar.resultado.alc_subtotal3;
+		var alSubTotCosto = '' + numeral(eaab_pagar.resultado.alc_subtotal1).format('$0,0.00');
+		var alSubTotSubAp = '' + numeral(eaab_pagar.resultado.alc_subtotal2).format('$0,0.00');
+		var alSubTotValor = '' + numeral(eaab_pagar.resultado.alc_subtotal3).format('$0,0.00');
 		
 		//Datos de otros cobros
 		var cobrosTotal = '$       -';
@@ -295,9 +295,9 @@ var eaab_pagar={
 		var adeudaTotal = '$        -';
 		
 		//Valores de la factura
-		var facturaTotal = '' + eaab_pagar.resultado.vlr_total;
-		var consumoMes = '' + eaab_pagar.resultado.vlr_mes;
-		var consumoDia = '' + eaab_pagar.resultado.vlr_dia;
+		var facturaTotal = '' + numeral(eaab_pagar.resultado.vlr_total).format('$0,0.00');
+		var consumoMes = '' + numeral(eaab_pagar.resultado.vlr_mes).format('$0,0.00');
+		var consumoDia = '' + numeral(eaab_pagar.resultado.vlr_dia).format('$0,0.00');
 		
 		//Valor factura Aseo
 		var operadorAseo = 'AGUAS DE BOGOTA';
