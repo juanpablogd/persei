@@ -32,20 +32,18 @@ var eaab_pagar={
 	            file.createWriter(function(fileWriter) {
 	                console.log("Writing content to file");
 	                fileWriter.write(DataBlob); console.log(folderpath+filename);
-
-					cordova.plugins.fileOpener2.open(
-					    folderpath+filename, // You can also use a Cordova-style file uri: cdvfile://localhost/persistent/Download/starwars.pdf
-					    'application/pdf', 
-					    { 
-					        error : function(e) { 
-					            console.log('Error status: ' + e.status + ' - Error message: ' + e.message);
-					        },
-					        success : function () {
-					            console.log('file opened successfully'); 				
-					        }
-					    }
-					);
-
+						cordova.plugins.fileOpener2.open(
+						    folderpath+filename, // You can also use a Cordova-style file uri: cdvfile://localhost/persistent/Download/starwars.pdf
+						    'application/pdf', 
+						    { 
+						        error : function(e) { 
+						            console.log('Error status: ' + e.status + ' - Error message: ' + e.message);
+						        },
+						        success : function () {
+						            console.log('file opened successfully'); 				
+						        }
+						    }
+						);
 	            }, function(){
 	                console.log('Unable to save file in path '+ folderpath);
 	            });
@@ -236,8 +234,8 @@ var eaab_pagar={
 		var cFactura = '' + eaab_pagar.resultado.ctacto;
 		var cValor = '$ 152.827';
 		var cPaguese = '3 DIAS DP LECT';
-		var cFechaPago = 'MAY/15/2018';
-		var cFechaSusp = 'MAY/30/2018';
+		var cFechaPago = 'OCT/15/2018';
+		var cFechaSusp = 'OCT/30/2018';
 		var cVigencia = '3';
 		
 		//Variables ruta lectura
@@ -703,7 +701,7 @@ var eaab_pagar={
 		if (typeof cordova !== 'undefined'){	//guardar
 			var contentType = "application/pdf";
 			var folderpath = cordova.file.externalDataDirectory;
-			var filename = "factura.pdf";
+			var filename = 'factura'+eaab_pagar.resultado.ctacto+'.pdf';
 
 			var uristring = doc.output('datauristring');
 			var myBase64 = "";
@@ -713,7 +711,7 @@ var eaab_pagar={
 			eaab_pagar.savebase64AsPDF(folderpath,filename,myBase64,contentType);
 
 		}else{//console.log(doc.output('datauristring'));
-		    doc.save('factura.pdf');
+		    doc.save('factura'+eaab_pagar.resultado.ctacto+'.pdf');
 		}
 
 	},
