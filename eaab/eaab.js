@@ -8,6 +8,9 @@ var eaab_pagar={
 	vertical:'',
 	esquema:'',
 	resultado:'',
+	graficaPromedio:'',
+	chart:'',
+	basePromedio:'',
 	errorCB:function(err) {
 		if (err.code == undefined && err.message == undefined){
 			alerta("Persei","Descargue formularios pendientes!","Ok","descargar.html");
@@ -71,6 +74,61 @@ var eaab_pagar={
 
 	      var blob = new Blob(byteArrays, {type: contentType});
 	      return blob;
+	},
+	generaGrafica: function(Lectura){
+		eaab_pagar.graficaPromedio = document.createElement("div");
+		eaab_pagar.graficaPromedio.setAttribute("id", "grapromedio");
+		eaab_pagar.graficaPromedio.setAttribute("style","width: 400px; height: 200px; margin: 0 auto");
+		document.body.appendChild(eaab_pagar.graficaPromedio);
+		$("#grapromedio").show();
+
+		eaab_pagar.chart = AmCharts.makeChart("grapromedio", {
+			  "type": "serial",
+			  "theme": "light",
+			  "marginRight": 70,
+			  "dataProvider": [{
+			    "country": "",
+			    "visits": 8,
+			    "color": "#a3a3c2"
+			  }, {
+			    "country": "",
+			    "visits": 12,
+			    "color": "#a3a3c2"
+			  }, {
+			    "country": "",
+			    "visits": 15,
+			    "color": "#a3a3c2"
+			  }, {
+			    "country": "",
+			    "visits": eaab_pagar.resultado.consumo,
+			    "color": "#5c5c8a"
+			  } ],
+			  "startDuration": 0,
+			  "graphs": [{
+			    "fillColorsField": "color",
+			    "fillAlphas": 0.9,
+			    "lineAlpha": 0.2,
+			    "type": "column",
+			    "valueField": "visits"
+			  }],
+			  "categoryField": "country",
+			  "rotate": true,
+			  "export": {
+			    "enabled": true
+			  }
+		});	console.log(eaab_pagar.graficaPromedio);
+		eaab_pagar.chart["export"].capture({}, function() {
+		    // SAVE TO PNG
+		    this.toPNG({}, function(base64) {
+		      // We have now a Base64-encoded image data
+		      // which we can now transfer to server via AJAX
+		      eaab_pagar.basePromedio=base64
+		      //console.log(eaab_pagar.basePromedio);
+		      $("#grapromedio").hide();
+		      eaab_pagar.crearFactura();
+		    });
+		  });
+		console.log("GraficaOK");
 	},
 	//CONSULTA LAS VERTICALES EN EL MOVIL
 	ConsultaItems:function (tx) {	
@@ -157,7 +215,7 @@ var eaab_pagar={
 			eaab_pagar.resultado.vlr_mes=Math.round(eaab_pagar.resultado.vlr_total/2);
 	   	}	
 	   	console.log(eaab_pagar.resultado);
-	   	eaab_pagar.crearFactura();
+	   	eaab_pagar.generaGrafica(1);
 	},
 	crearFactura:function () {	console.log("CrearFactura");
 
@@ -206,10 +264,8 @@ var eaab_pagar={
 		var vLect1 = '8';
 		var vLect2 = '12';
 		var vLect3 = '15';
-		var vLectAVG = '17';
-		var imgGrafico = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOkAAABdCAYAAABAbEGAAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAO1SURBVHhe7d3tTRwxEIBhSqMKqqAJmqAJikC0QTOXTMRIjrXsrTGwc7vPI42SAD/zyvthH3cXoDSRQnEiheJECsWJFIoTKRQnUihOpFCcSP96e3u73N/f/zdQxekjfX9//xfly8vLx1cul8fHx8vDw8PHv2Bfq5G+vr7e3IyKOPuVc+lrsJfTR5qXuvFnenp6spJSxukjDRFlhPr8/PzvUjf+HpfBUIFIP2SoGStUIdK/IsxYQUNe/rrcpYrTR7p0/5mhtk98YS+rkZ5BrKARak+kVHH6SOP+M4JsHxQtfQ32cvpIQ/vQKEegVCFSKE6kUJxIoTiRQnEiheJE+ktiw0Q8Ne7lUbl2oCXSH9YfKO9FvO0JnPi3LYm0RPrDIszYHJEbJK7Js6ze05JWI13aG3vmmbE10lx5RUoS6cDM2Brp0oZ/zk2kAzNjS6T5ECl+FpJIB2bGlkhjBc1zrZBEOjAzrkWaH9sCPZEOzIy1SPMUDixZjZTv81mk+XVPc/mMSH9YBLg0uYFh6Xsx7k1JIoXiRArFiRSKEykUJ1IoTqRQnEhvSG56aM+fhjze1k//c9wmkd6Itfj8PtVjW410aWucmZ9RsbEhJs+aivRcRLrDfJVIz0mkO8xXXYu0ndgTzDGIdIf5qs8i7WW0Qj0Gke4wX7U10hD3sD6G5RhEusN81UikPivpOFYjpZbRldRxt2MQ6Q35LNJYMdtD43mQfEvM1CfSGxArYkTXTz4Yyijb8UkPxyFSKE6kUJxIoTiRQnEiheJEChPytVg7vf7p/Oh2TZHChP4ddf/7fGIfdez+SrmveuQd9mqkS1vajDnyzMp31mtGV1ORGtPMrGt7pvPXW8aKupVIjWlmRt6frq2SeX86QqTGNDMqV8ac9v4z5QfI5Yxu2RSpMc3MurZSbllteyI1ppnvcC3CLQ+XWquRAuNECkXEpWv/JDfvP1Nc/rZPcvMe9tsud4F1/UOhNtDQP1iKGQk0iBSKEykUJ1IoTqRQnEihOJEeVO5s6bepLT2NzBnZ9M3vEekBtSH2kS7JoEf3lPI7RHoweag4gosX7VsijRfu7UFlalmN9O7uzuw8M7ZEmi/bXerWJdLiM2NLpPH9tUPK7E+kxWfGlkhjFR3dpsbvEmnxmXEt0vb+lbpEWnxmXIt0y0rL/kRafGasRZivXeJPapv7X0Bpa5HGK5f4PvWJ9GDyPrOfNsh87eKB0W0QKRQnUihOpFCcSKE4kUJxIoXiRArFiRSKEymUdrn8AWEtfwbrDSK6AAAAAElFTkSuQmCC';
-		
-		
+		var vLectAVG = numeral(((8+12+15+eaab_pagar.resultado.consumo)/4)).format('0,0');
+	
 		//Variables de Datos de Acueducto
 		var aCargoFij = '1';
 		var aConsBas = '22';
@@ -415,7 +471,7 @@ var eaab_pagar={
 		doc.text(25, 54, vLect3);
 		doc.text(25, 56, lConsumo);
 		doc.text(25, 58, vLectAVG);
-		doc.addImage(imgGrafico, 'PNG', 33, 48, 30, 10);
+		doc.addImage(eaab_pagar.basePromedio, 'PNG', 33, 48, 30, 10);
 		
 		doc.setFontSize(6);
 		doc.setFontType("bolditalic");
